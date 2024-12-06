@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'compressor',
     'ninja',
     'c3ds.core',
+    'django_vite_plugin',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'c3ds.wsgi.application'
+ASGI_APPLICATION = 'c3ds.asgi.application'
 
 
 # Database

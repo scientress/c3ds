@@ -14,3 +14,4 @@ daphne==4.1.2
 redis==5.2.0
 hiredis==2.4.0
 channels-redis==4.2.1
+django_vite_plugin==3.0.4

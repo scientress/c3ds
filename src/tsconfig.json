@@ -1,0 +1,50 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@s:daphne/*": [
+        "./../env/lib/python3.12/site-packages/daphne/static/daphne/*"
+      ],
+      "@t:daphne/*": [
+        "./../env/lib/python3.12/site-packages/daphne/templates/daphne/*"
+      ],
+      "@s:channels/*": [
+        "./../env/lib/python3.12/site-packages/channels/static/channels/*"
+      ],
+      "@t:channels/*": [
+        "./../env/lib/python3.12/site-packages/channels/templates/channels/*"
+      ],
+      "@s:compressor/*": [
+        "./../env/lib/python3.12/site-packages/compressor/static/compressor/*"
+      ],
+      "@t:compressor/*": [
+        "./../env/lib/python3.12/site-packages/compressor/templates/compressor/*"
+      ],
+      "@s:ninja/*": [
+        "./../env/lib/python3.12/site-packages/ninja/static/ninja/*"
+      ],
+      "@t:ninja/*": [
+        "./../env/lib/python3.12/site-packages/ninja/templates/ninja/*"
+      ],
+      "@s:django_extensions/*": [
+        "./../env/lib/python3.12/site-packages/django_extensions/static/django_extensions/*"
+      ],
+      "@t:django_extensions/*": [
+        "./../env/lib/python3.12/site-packages/django_extensions/templates/django_extensions/*"
+      ],
+      "@s:debug_toolbar/*": [
+        "./../env/lib/python3.12/site-packages/debug_toolbar/static/debug_toolbar/*"
+      ],
+      "@t:debug_toolbar/*": [
+        "./../env/lib/python3.12/site-packages/debug_toolbar/templates/debug_toolbar/*"
+      ]
+    }
+  }
+}
