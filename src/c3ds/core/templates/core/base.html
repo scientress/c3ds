@@ -7,6 +7,7 @@
     <!--Vite dev client for hmr (will not be displayed on production)-->
     {% vite %}
     {% vite 'c3ds/static/css/base.scss' %}
+    {% vite 'core/ts/clock.ts' %}
     {% compress css %}
     <link rel="stylesheet" href="{% static '38c3/fonts/pilowlava.css' %}">
     <link rel="stylesheet" href="{% static '38c3/fonts/space-grotesk.css' %}">
@@ -33,7 +34,7 @@
                 <div class="flex flex-row grow place-content-center">
                     {% block header %}<h1 class="text-8xl font-headline font-semibold">{% block header_text %}Information{% endblock %}</h1>{% endblock %}
                 </div>
-                <div class="p-2 flex flex-col place-content-center text-center text-accent2">
+                <div class="p-2 flex flex-col place-content-center text-center text-accent2" id="clock" data-day-zero="{{ event.day_zero }}">
                     <p class="text-4xl mb-2">Day <span class="font-numbers">-19</span></p>
                     <p class="text-5xl font-numbers">22:27</p>
                 </div>

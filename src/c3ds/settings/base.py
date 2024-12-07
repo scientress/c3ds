@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import datetime
 from contextlib import suppress
 from pathlib import Path
 
@@ -76,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'c3ds.core.context_processors.event_data',
             ],
         },
     },
@@ -268,3 +270,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_SERIALIZER = 'json'
 
 
+# Event Config
+DAY_ZERO = env.str('C3DS_DAY_ZERO', default=None)
+if DAY_ZERO:
+    DAY_ZERO = datetime.datetime.fromisoformat(DAY_ZERO)
