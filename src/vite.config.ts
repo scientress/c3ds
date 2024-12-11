@@ -10,6 +10,7 @@ export default defineConfig({
     djangoVitePlugin({
       input: [
         'c3ds/static/css/base.scss',
+        'core/ts/main.ts',
         'core/ts/clock.ts',
       ],
     })

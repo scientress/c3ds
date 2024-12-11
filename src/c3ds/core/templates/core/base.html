@@ -7,7 +7,7 @@
     <!--Vite dev client for hmr (will not be displayed on production)-->
     {% vite %}
     {% vite 'c3ds/static/css/base.scss' %}
-    {% vite 'core/ts/clock.ts' %}
+    {% vite 'core/ts/main.ts' 'core/ts/clock.ts' %}
     {% compress css %}
     <link rel="stylesheet" href="{% static '38c3/fonts/pilowlava.css' %}">
     <link rel="stylesheet" href="{% static '38c3/fonts/space-grotesk.css' %}">
@@ -16,35 +16,41 @@
     {% endcompress %}
     <title>{% block title %}c3ds{% block title-extra %}{% endblock %}{% endblock %}</title>
 </head>
-<body class="text-primary bg-background h-dvh p-2">
+<body class="text-primary bg-background h-dvh {% if layout_mode|default:'normal' != 'fullscreen' %} p-2 {% endif %}">
 {% block body %}
-    <div class="bg-accent4 p-1 flex flex-col gap-1 h-full">
-        <div class="h-32 flex flex-row gap-1">
-            <div class="p-4 bg-background">
-                <img src="{% static '38c3/images/logo-simple.svg' %}" class="h-full" alt="38c3" />
-            </div>
-            {% comment %}
-            <div class="grow grid grid-cols-12 gap-1 headerblob">
-                {% for i in 24|times  %}
-                    <div class="bg-background"></div>
-                {% endfor %}
-            </div>
-            {% endcomment %}
-            <div class="flex flex-row grow headerblob p-2 ">
-                <div class="flex flex-row grow place-content-center">
-                    {% block header %}<h1 class="text-8xl font-headline font-semibold">{% block header_text %}Information{% endblock %}</h1>{% endblock %}
+    {% if layout_mode|default:'normal' != 'fullscreen' %}
+        <div class="bg-accent4 p-1 flex flex-col gap-1 h-full overflow-y-clip">
+            {% if layout_mode|default:'normal' == 'normal' %}
+            <div class="h-32 flex flex-row gap-1">
+                <div class="p-4 bg-background">
+                    <img src="{% static '38c3/images/logo-simple.svg' %}" class="h-full" alt="38c3" />
                 </div>
-                <div class="p-2 flex flex-col place-content-center text-center text-accent2" id="clock" data-day-zero="{{ event.day_zero }}">
-                    <p class="text-4xl mb-2">Day <span class="font-numbers">-19</span></p>
-                    <p class="text-5xl font-numbers">22:27</p>
+                {% comment %}
+                <div class="grow grid grid-cols-12 gap-1 headerblob">
+                    {% for i in 24|times  %}
+                        <div class="bg-background"></div>
+                    {% endfor %}
                 </div>
-
+                {% endcomment %}
+                <div class="flex flex-row grow headerblob p-2 ">
+                    <div class="flex flex-row grow place-content-center">
+                        {% block header %}<h1 class="text-8xl font-headline font-semibold">{% block header_text %}{% endblock %}</h1>{% endblock %}
+                    </div>
+                    <div class="p-2 flex flex-col place-content-center text-center text-accent2" id="clock" data-day-zero="{{ event.day_zero }}">
+                        <p class="text-4xl mb-2">Day <span class="font-numbers">-19</span></p>
+                        <p class="text-5xl font-numbers">22:27</p>
+                    </div>
+    
+                </div>
+            </div>
+            {% endif %}
+            <div class="bg-background grow p-2 relative cornerblob">
+    {% endif %}
+                {% block content %}{% endblock %}
+    {% if layout_mode|default:'normal' != 'fullscreen' %}
             </div>
         </div>
-        <div class="bg-background grow p-2 relative cornerblob">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
+    {% endif %} 
 {% endblock %}
 </body>
 </html>

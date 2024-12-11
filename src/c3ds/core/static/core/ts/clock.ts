@@ -7,10 +7,13 @@ import moment from 'moment';
   const timeElement = container.querySelector('p:last-child')
   if (dayElement === null || timeElement === null) return;
   const dayZero = moment(container.dataset['dayZero'])
-  setInterval(() => {
+
+  const update_time = () => {
     const now = moment()
     const diff = moment.duration(now.diff(dayZero))
     dayElement.textContent = diff.days().toString()
     timeElement.textContent = now.format('HH:mm')
-  }, 1000)
+  }
+  update_time()
+  setInterval(update_time, 1000)
 })()

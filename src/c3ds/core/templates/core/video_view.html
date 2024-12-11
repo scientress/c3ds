@@ -1,0 +1,6 @@
+{% extends "core/base.html" %}
+{% block header_text %}{{ view.title }}{% endblock %}
+{% block content %}
+        <video id="video" class="video-js !bg-transparent" data-src="{{ view.get_video_src }}" data-type="{{ view.get_video_type }}">
+        </video>
+{% endblock %}
