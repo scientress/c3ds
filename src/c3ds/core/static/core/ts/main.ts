@@ -12,6 +12,9 @@ if (video_container !== null) {
       loop: true,
     })
     player.src({ src: video_src, type: video_type})
-    player.play()
+    player.play()?.catch(() => {
+      player.muted(true)
+      player.play()
+    })
   }
 }
