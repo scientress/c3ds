@@ -1,7 +1,5 @@
 {% extends "core/base.html" %}
 {% block header_text %}{{ view.title }}{% endblock %}
 {% block content %}
-    <div class="absolute top-0 left-0 bottom-0 right-0 flex grow shrink place-content-center">
     <img src="{{ view.image.file.url }}" alt="{{ view.image.name }}" class="object-contain h-full w-full"></img>
-    </div>
 {% endblock %}
