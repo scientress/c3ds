@@ -9,7 +9,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
     date_end: Moment
     color: string
     speakers: string[]
-    percent_completed: float
+    percent_completed: number
   }
 
   interface Track {
