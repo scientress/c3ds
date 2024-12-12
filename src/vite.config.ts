@@ -12,6 +12,7 @@ export default defineConfig({
         'c3ds/static/css/base.scss',
         'core/ts/main.ts',
         'core/ts/clock.ts',
+        'core/ts/schedule.ts',
       ],
     })
   ],

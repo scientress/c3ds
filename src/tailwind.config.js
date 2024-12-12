@@ -25,6 +25,9 @@ export default {
         'subheadline': ['Uncut Sans'],
         'sans': ['Uncut Sans', ...defaultTheme.fontFamily.sans],
         'numbers': ['Space Mono']
+      },
+      gridTemplateColumns: {
+        'schedule': 'max-content 15px 1fr',
       }
     },
   },

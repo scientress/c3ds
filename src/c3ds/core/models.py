@@ -1,11 +1,17 @@
+import datetime
+import logging
 import uuid
 from contextlib import suppress
+from pathlib import Path
 from typing import Optional, Self
 
+import requests
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
+
+logger = logging.getLogger(__name__)
 
 
 class Display(models.Model):
@@ -210,3 +216,74 @@ class VideoView(BaseView):
                 return 'application/dash+xml'
             case _:
                 return f'video/{suffix}'
+
+
+class Schedule(models.Model):
+    name = models.CharField(max_length=128, verbose_name=_('Name'))
+    uuid = models.UUIDField(verbose_name=_('UUID'), default=uuid.uuid4, editable=False, unique=True)
+    url = models.URLField(verbose_name=_('URL'))
+    version = models.CharField(max_length=256, verbose_name=_('Version'), editable=False, null=True, blank=True)
+    etag = models.CharField(max_length=256, verbose_name='ETag', editable=False, null=True, blank=True)
+    file = models.FileField(verbose_name=_('File'), upload_to='schedule/', null=True, blank=True)
+    last_changed = models.DateTimeField(verbose_name=_('Last Changed'), auto_now=True)
+    created_at = models.DateTimeField(verbose_name=_('Created At'), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _('Schedule')
+        verbose_name_plural = _('Schedules')
+        default_related_name = 'schedules'
+
+    def __str__(self):
+        return self.name
+
+    def update_schedule(self, force: bool = False):
+        if self.pk is None:
+            raise ValueError('Save model first')
+        # start transaction and lock
+        with transaction.atomic():
+            obj = Schedule.objects.select_for_update().get(pk=self.pk)
+            file_time = None
+            if self.file:
+                with suppress(FileNotFoundError):
+                    file_time = datetime.datetime.fromtimestamp(Path(self.file.path).stat().st_mtime, datetime.UTC)\
+                        .strftime('%a, %d %b %Y %H:%M:%S GMT')
+            req = requests.get(self.url, headers={
+                'Accept': 'application/json',
+                'If-None-Match': self.etag,
+                'If-Modified-Since': None if self.etag else file_time
+            })
+            if not force and req.status_code == 304:
+                logger.info('Not updating schedule "%s" [%d], unchanged. (304)', self.name, self.pk)
+                return
+            req.raise_for_status()
+            data = req.json()
+            old_version = self.version
+            new_version = data['schedule']['version']
+            if not force and self.version and self.version == new_version:
+                logger.info('Not updating schedule "%s" [%d], unchanged. (Version)', self.name, self.pk)
+                return
+            if not self.file.name:
+                self.file.name = f'schedules/schedule-{self.uuid}.json'
+            with self.file.open('wb') as fp:
+                fp.write(req.content)
+            self.etag = req.headers.get('ETag', None)
+            self.version = new_version
+            self.save()
+            logger.info('Updated schedule "%s" [%d]: %s → %s', self.name, self.pk, old_version, new_version)
+
+    @property
+    def local_url(self):
+        return self.file.url
+
+
+class ScheduleView(BaseView):
+    template_name = 'core/schedule_view.html'
+    vue_module = 'ScheduleView'
+    schedule = models.ForeignKey(Schedule, on_delete=models.PROTECT, verbose_name=_('Schedule'))
+    room_filter = models.CharField(max_length=256, verbose_name=_('Room Filter'), blank=True, null=True,
+                                        help_text=_('Room filter for schedule as semicolon-separated list'))
+
+    class Meta:
+        verbose_name = _('Schedule View')
+        verbose_name_plural = _('Schedule Views')
+        default_related_name = 'schedule_views'
