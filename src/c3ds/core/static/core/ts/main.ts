@@ -1,7 +1,7 @@
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 
-const displaySlug = document.querySelector('body')?.dataset['displaySlug']
+// const displaySlug = document.querySelector('body')?.dataset['displaySlug']
 
 // Video Playback
 const video_container = document.getElementById('video')
