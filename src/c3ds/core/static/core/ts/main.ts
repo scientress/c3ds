@@ -40,6 +40,9 @@ class WebScoketClient {
   }
 
   connect() {
+    if (this.displaySlug === undefined || this.displaySlug == null) {
+      return
+    }
     this.ws = new WebSocket(
       window.location.protocol === 'https' ? 'wss://' : 'ws://'
       + window.location.host
