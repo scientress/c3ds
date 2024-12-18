@@ -20,9 +20,9 @@
 <body class="text-primary bg-background layout-{{ layout_mode|default:'normal' }} {% block body_class %}{% endblock %}" {% block body_extra %}{% endblock %}{% if display %}data-display-slug="{{ display.slug }}"{% endif %}>
 {% block body %}
     {% if layout_mode|default:'normal' != 'fullscreen' %}
-        <div class="bg-accent4 p-1 flex flex-col gap-1 h-full overflow-y-clip">
+        <div class="bg-accent4 p-1 flex flex-col gap-1 h-full overflow-hidden">
             {% if layout_mode|default:'normal' == 'normal' %}
-            <div class="h-32 flex flex-row gap-1">
+            <div class="h-32 flex flex-row gap-1 flex-shrink-0">
                 <div class="p-4 bg-background">
                     <img src="{% static '38c3/images/logo-simple.svg' %}" class="h-full" alt="38c3" />
                 </div>
