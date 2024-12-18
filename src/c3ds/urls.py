@@ -38,5 +38,5 @@ if settings.DEBUG:
 
 
 websocket_urlpatterns = [
-    re_path(r"ws/display/(?P<display_slug>\w+)/$", DisplayConsumer.as_asgi()),
+    re_path(r"ws/display/(?P<display_slug>[a-zA-Z0-9-]+)/$", DisplayConsumer.as_asgi()),
 ]
