@@ -1,5 +1,6 @@
 {% extends "core/base.html" %}
 {% load vite %}
+{% block body_extra %}data-display-slug="{{ slug }}"{% endblock %}
 {% block content %}
     <div class="flex flex-col justify-center h-full">
         <h1 class="text-8xl font-bold m-4 text-center">Display Unconfigured</h1>

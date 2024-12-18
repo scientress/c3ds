@@ -12,3 +12,5 @@ class CoreConfig(AppConfig):
         for setting in ('DATA_DIR', 'MEDIA_ROOT', 'STATIC_ROOT'):
             directory = getattr(settings, setting)
             check_directory(directory)
+
+        import c3ds.core.signals  # NoQa

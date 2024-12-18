@@ -18,3 +18,15 @@
   background-size: 100% 100%;
   //background-blend-mode: lighten;
 }
+
+body {
+  &.layout-normal {
+    @apply p-2;
+  }
+  &.layout-cover {
+    @apply p-2
+  }
+  &.layout-fullscreen {
+
+  }
+}
