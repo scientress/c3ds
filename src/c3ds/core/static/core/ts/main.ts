@@ -44,7 +44,7 @@ class WebScoketClient {
       return
     }
     this.ws = new WebSocket(
-      window.location.protocol === 'https' ? 'wss://' : 'ws://'
+      window.location.protocol === 'https:' ? 'wss://' : 'ws://'
       + window.location.host
       + '/ws/display/'
       + this.displaySlug
