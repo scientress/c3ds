@@ -41,7 +41,7 @@ class WebScoketClient {
 
   connect() {
     this.ws = new WebSocket(
-      'ws://'
+      '//'
       + window.location.host
       + '/ws/display/'
       + displaySlug
