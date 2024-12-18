@@ -5,6 +5,12 @@ import { djangoVitePlugin } from 'django-vite-plugin'
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    target: [
+      'es2020',
+      'chrome70',
+    ]
+  },
   plugins: [
     vue(),
     djangoVitePlugin({

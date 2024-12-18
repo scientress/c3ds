@@ -14,9 +14,10 @@
     <link rel="stylesheet" href="{% static '38c3/fonts/uncut-sans.css' %}">
     <link rel="stylesheet" href="{% static '38c3/fonts/space-mono.css' %}">
     {% endcompress %}
+    <script src="https://sentry.isystems.io/js-sdk-loader/cfc085dcd1c21540642b44be23697b12.min.js" crossorigin="anonymous"></script>
     <title>{% block title %}c3ds{% block title-extra %}{% endblock %}{% endblock %}</title>
 </head>
-<body class="text-primary bg-background h-dvh layout-{{ layout_mode|default:'normal' }} {% block body_class %}{% endblock %}" {% block body_extra %}{% endblock %}{% if display %}data-display-slug="{{ display.slug }}"{% endif %}>
+<body class="text-primary bg-background layout-{{ layout_mode|default:'normal' }} {% block body_class %}{% endblock %}" {% block body_extra %}{% endblock %}{% if display %}data-display-slug="{{ display.slug }}"{% endif %}>
 {% block body %}
     {% if layout_mode|default:'normal' != 'fullscreen' %}
         <div class="bg-accent4 p-1 flex flex-col gap-1 h-full overflow-y-clip">
@@ -44,7 +45,7 @@
                 </div>
             </div>
             {% endif %}
-            <div class="bg-background grow p-2 relative cornerblob overflow-hidden">
+            <div class="bg-background grow p-2 relative cornerblob overflow-hidden flex flex-col">
     {% endif %}
                 {% block content %}{% endblock %}
     {% if layout_mode|default:'normal' != 'fullscreen' %}

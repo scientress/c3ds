@@ -20,6 +20,8 @@
 }
 
 body {
+  height: 100vh; // we can't use 100dvh, because cch uses chrome 70 -_-
+
   &.layout-normal {
     @apply p-2;
   }
