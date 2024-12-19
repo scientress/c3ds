@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -8,12 +9,17 @@ from c3ds.core.models import (Display, HTMLView, IFrameView, ImageFile, ImageVie
 
 @admin.register(Display)
 class DisplayAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'static_view', 'playlist', 'last_changed')
+    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'last_changed')
+
+    def link(self, obj):
+        url = reverse('display_by_slug', kwargs={'slug': obj.slug})
+        return mark_safe(f'<a href="{url}" target="_blank">view</a>')
 
 
 @admin.register(HTMLView)
 class HTMLViewAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'title', 'last_changed')
+
 
 @admin.register(IFrameView)
 class IFrameViewAdmin(admin.ModelAdmin):
