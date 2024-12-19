@@ -6,24 +6,28 @@ from django.utils.translation import gettext_lazy as _
 from c3ds.core.models import (Display, HTMLView, IFrameView, ImageFile, ImageView, Schedule, ScheduleView, VideoFile,
                               VideoView)
 
-
-@admin.register(Display)
-class DisplayAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'last_changed')
+class SlugLinkMixin():
+    slug_view = 'view_by_slug'
 
     def link(self, obj):
-        url = reverse('display_by_slug', kwargs={'slug': obj.slug})
+        url = reverse(self.slug_view, kwargs={'slug': obj.slug})
         return mark_safe(f'<a href="{url}" target="_blank">view</a>')
 
 
+@admin.register(Display)
+class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
+    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'last_changed')
+    slug_view = 'display_by_slug'
+
+
 @admin.register(HTMLView)
-class HTMLViewAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'title', 'last_changed')
+class HTMLViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+    list_display = ('name', 'slug', 'title', 'link', 'last_changed')
 
 
 @admin.register(IFrameView)
-class IFrameViewAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'title', 'layout_mode', 'url', 'last_changed')
+class IFrameViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+    list_display = ('name', 'slug', 'title', 'layout_mode', 'url', 'link', 'last_changed')
 
 
 @admin.register(ImageFile)
@@ -35,8 +39,8 @@ class ImageFileAdmin(admin.ModelAdmin):
 
 
 @admin.register(ImageView)
-class ImageViewAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'title', 'layout_mode', 'image', 'last_changed')
+class ImageViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+    list_display = ('name', 'slug', 'title', 'layout_mode', 'image', 'link', 'last_changed')
 
 
 @admin.register(VideoFile)
@@ -48,8 +52,8 @@ class VideoFileAdmin(admin.ModelAdmin):
 
 
 @admin.register(VideoView)
-class VideoViewAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'title', 'layout_mode', 'video', 'video_url', 'last_changed')
+class VideoViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+    list_display = ('name', 'slug', 'title', 'layout_mode', 'video', 'video_url', 'link', 'last_changed')
 
 
 @admin.register(Schedule)
@@ -66,5 +70,5 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 
 @admin.register(ScheduleView)
-class ScheduleViewAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'title', 'layout_mode', 'schedule', 'room_filter', 'last_changed')
+class ScheduleViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+    list_display = ('name', 'slug', 'title', 'layout_mode', 'schedule', 'room_filter', 'link', 'last_changed')
