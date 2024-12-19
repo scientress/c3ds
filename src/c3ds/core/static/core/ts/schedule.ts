@@ -35,5 +35,5 @@ if (scheduleContainer !== null) {
     })
   }
   load_data()
-  window.setInterval(load_data, 10*60*1000)
+  window.setInterval(load_data, 5*60*1000)
 }
