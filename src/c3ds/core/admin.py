@@ -16,8 +16,11 @@ class SlugLinkMixin():
 
 @admin.register(Display)
 class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
-    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'last_changed')
+    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'last_changed')
     slug_view = 'display_by_slug'
+
+    def c3nav(self, obj):
+        return mark_safe(f'<a href="https://38c3.c3nav.de/l/{obj.slug.lower()}" target="_blank">map</a>')
 
 
 @admin.register(HTMLView)
