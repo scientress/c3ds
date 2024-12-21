@@ -41,7 +41,7 @@ interface BackdoorResult {
   pEnd?: number;
 }
 
-class WebScoketClient {
+class WebSocketClient {
   displaySlug: string | null
   ws: WebSocket | null = null
   heartbeat_interval: number | null = null
@@ -134,4 +134,4 @@ class WebScoketClient {
 
 }
 
-new WebScoketClient(true)
+new WebSocketClient(true)
