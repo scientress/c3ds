@@ -26,7 +26,8 @@ from c3ds.core.consumer import DisplayConsumer
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(c3ds.core.urls))
+    path('oauth/', include('social_django.urls', namespace='social')),
+    path('', include(c3ds.core.urls)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

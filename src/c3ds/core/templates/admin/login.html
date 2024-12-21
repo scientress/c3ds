@@ -1,0 +1,9 @@
+{% extends "admin/login.html" %}
+
+{% block content %}
+    {{block.super}}
+    <div>
+        <h1>SSO</h1>
+        <a href="{% url 'social:begin' backend='oidc' %}">c3voc sso</a>
+    </div>
+{% endblock %}
