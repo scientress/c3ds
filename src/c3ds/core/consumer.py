@@ -25,10 +25,11 @@ class DisplayConsumer(WebsocketConsumer):
         pass
 
     def receive(self, text_data = None, bytes_data = None):
-        text_data_json = json.loads(text_data)
+        data: dict[str] = json.loads(text_data)
         logger.info('Received message: %s', text_data)
 
-        # self.send(text_data=json.dumps({"message": message}))
+        if data.get('cmd', None) == 'ping':
+            self.cmd({'cmd': 'pong'})
 
     def cmd(self, event):
         # Receive message from display group
