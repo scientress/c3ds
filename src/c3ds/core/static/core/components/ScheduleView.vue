@@ -106,12 +106,12 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
 </script>
 
 <template>
-  <div class="grid grid-cols-schedule text-3xl gap-2 text-highlight">
+  <div class="grid grid-cols-schedule text-4xl gap-2 text-highlight">
     <template v-for="talk in next_talks" :key="talk.guid">
-      <div class="font-numbers font-semibold text-4xl">{{ talk.start }}</div>
+      <div class="font-numbers font-semibold text-5xl">{{ talk.start }}</div>
       <div class="w-4" :style="{backgroundColor: talk.color}">&nbsp;</div>
       <div :style='{background: `linear-gradient(90deg, #29114C ${talk.percent_completed}%, rgba(0,0,0,0) ${talk.percent_completed}%)`}'>
-        <h2 class="font-headline font-semibold text-4xl">{{ talk.title }}</h2>
+        <h2 class="font-headline font-semibold text-5xl">{{ talk.title }}</h2>
         <p>{{ talk.room }}<template v-if="talk.speakers.length > 0"> with {{ talk.speakers.join(', ') }}</template></p>
       </div>
     </template>
