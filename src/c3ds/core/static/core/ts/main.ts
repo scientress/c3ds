@@ -1,5 +1,6 @@
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import {BackdoorResult, WebSocketCommand} from "./shared.ts";
 
 // const displaySlug = document.querySelector('body')?.dataset['displaySlug']
 
@@ -25,21 +26,6 @@ if (video_container !== null) {
 
 // websocket stuff
 
-interface WebSocketCommand {
-  cmd: string;
-  id?: number;
-  payload?: string;
-}
-
-interface BackdoorResult {
-  cmd: 'bdRES',
-  id: number;
-  reqCmd: string,
-  error?: Error | any;
-  result?: any;
-  pStart: number;
-  pEnd?: number;
-}
 
 class WebSocketClient {
   displaySlug: string | null
@@ -118,12 +104,15 @@ class WebSocketClient {
       reqCmd: cmd.payload,
       id: cmd.id,
       pStart: performance.now(),
+      pEnd: null,
+      error: null,
+      result: null,
     };
 
     try {
       res.result = (0, eval)(cmd.payload);
-    } catch (e) {
-      res.error = e;
+    } catch (e: any) {
+      res.error = e.toString();
       return;
     }
 

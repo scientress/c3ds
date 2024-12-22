@@ -32,3 +32,95 @@ body {
 
   }
 }
+
+
+.shell {
+  min-width: 500px;
+  //border: 2px blue solid;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 20px 0;
+  max-width: 40%;
+  display: flex;
+  flex-direction: column;
+
+  #log {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+  }
+
+  #cmd {
+    flex-shrink: 0;
+    flex-grow: 0;
+
+    width: 100%;
+    padding: 4px 10px;
+
+    border: 1px solid black;
+    background: #e1e1e1;
+
+    outline: none;
+  }
+
+  .entry {
+    background-color: #e8e8e8;
+    border: 1px solid #999999;
+    border-top-width: 0;
+
+    &:first-child {
+      border-top-width: 1px;
+    }
+
+    > div {
+      padding: 0 10px;
+    }
+
+    &.ok {
+      background-color: #bfffbf;
+      border-color: #82ff82;
+    }
+
+    &.err {
+      background-color: #ffbfbf;
+      border-color: #ff8282;
+    }
+
+    p {
+      padding: 2px;
+    }
+  }
+
+  .cmdstr {
+    flex-grow: 1;
+    word-break: break-word;
+  }
+
+  .sent, .recv {
+    width: 100%;
+  }
+
+  .sent {
+    display: flex;
+    min-height: 52px;
+    border-bottom: 1px dotted black;
+  }
+
+  .time {
+    //width: 100px;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    span {
+      display: block;
+    }
+  }
+
+  .error {
+    //width: 30px;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+}
