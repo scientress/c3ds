@@ -14,3 +14,4 @@ class CoreConfig(AppConfig):
             check_directory(directory)
 
         import c3ds.core.signals  # NoQa
+        import c3ds.core.metrics  # NoQa

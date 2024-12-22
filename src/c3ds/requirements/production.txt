@@ -16,3 +16,5 @@ hiredis==2.4.0
 channels-redis==4.2.1
 django_vite_plugin==3.0.4
 social-auth-app-django==5.4.2
+prometheus-client==0.21.1
+django-prometheus==2.3.1
