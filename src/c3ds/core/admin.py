@@ -24,7 +24,7 @@ class SlugLinkMixin():
 
 @admin.register(Display)
 class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
-    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'heartbeat', 'last_changed')
+    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'heartbeat', 'shell', 'last_changed')
     slug_view = 'display_by_slug'
 
     fields = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'last_seen', 'last_changed')
@@ -32,6 +32,10 @@ class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
 
     def c3nav(self, obj):
         return mark_safe(f'<a href="https://38c3.c3nav.de/l/{obj.slug.lower()}" target="_blank">map</a>')
+
+    def shell(self, obj):
+        url = reverse('shell_by_slug', kwargs={'slug': obj.slug})
+        return mark_safe(f'<a href="{url}" target="_blank">shell</a>')
 
     def heartbeat(self, obj: Display):
         last = cache.get(obj.get_heartbeat_cache_key())
