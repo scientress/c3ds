@@ -33,7 +33,8 @@ class DisplayConsumer(WebsocketConsumer):
         logger.info('Received message: %s', text_data)
 
         if data.get('cmd', None) == 'ping':
-            cache.set(Display.heartbeat_cache_key_for_slug(self.display_slug), datetime.now(tz=UTC), 24*60*60)
+            if not self.scope['user'].is_authenticated:
+                cache.set(Display.heartbeat_cache_key_for_slug(self.display_slug), datetime.now(tz=UTC), None)
             self.cmd({'cmd': 'pong'})
 
     def cmd(self, event):
