@@ -1,4 +1,7 @@
+import datetime
+
 from django.contrib import admin
+from django.core.cache import cache
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -16,11 +19,31 @@ class SlugLinkMixin():
 
 @admin.register(Display)
 class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
-    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'last_changed')
+    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'heartbeat', 'last_changed')
     slug_view = 'display_by_slug'
+
+    fields = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'last_seen', 'last_changed')
+    readonly_fields = ('link', 'c3nav', 'last_seen', 'last_changed')
 
     def c3nav(self, obj):
         return mark_safe(f'<a href="https://38c3.c3nav.de/l/{obj.slug.lower()}" target="_blank">map</a>')
+
+    def heartbeat(self, obj: Display):
+        last = cache.get(obj.get_heartbeat_cache_key())
+        if last is None or not isinstance(last, datetime.datetime):
+            return 'Unknown'
+        else:
+            if datetime.datetime.now(tz=datetime.UTC) - last > datetime.timedelta(minutes=1):
+                return mark_safe('<span style="color: red;">Offline</span>')
+            else:
+                return mark_safe('<span style="color: green;">Online</span>')
+
+    def last_seen(self, obj: Display):
+        last = cache.get(obj.get_heartbeat_cache_key())
+        if last is None or not isinstance(last, datetime.datetime):
+            return 'Unknown'
+        else:
+            return last.strftime('%Y-%m-%d %H:%M')
 
 
 @admin.register(HTMLView)

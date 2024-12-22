@@ -37,6 +37,13 @@ class Display(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def heartbeat_cache_key_for_slug(slug: str) -> str:
+        return f'{slug}-heartbeat'
+
+    def get_heartbeat_cache_key(self):
+        return self.heartbeat_cache_key_for_slug(self.slug)
+
 
 class MediaFile(models.Model):
     name = models.CharField(max_length=128, verbose_name=_('Name'))

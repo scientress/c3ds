@@ -1,8 +1,12 @@
 import json
 import logging
+from datetime import datetime, UTC
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from django.core.cache import cache
+
+from c3ds.core.models import Display
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +33,7 @@ class DisplayConsumer(WebsocketConsumer):
         logger.info('Received message: %s', text_data)
 
         if data.get('cmd', None) == 'ping':
+            cache.set(Display.heartbeat_cache_key_for_slug(self.display_slug), datetime.now(tz=UTC), 24*60*60)
             self.cmd({'cmd': 'pong'})
 
     def cmd(self, event):
