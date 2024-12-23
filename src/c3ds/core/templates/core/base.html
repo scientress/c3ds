@@ -36,11 +36,10 @@
                     <div class="flex flex-row grow place-content-center">
                         {% block header %}<h1 class="text-8xl font-headline font-semibold">{% block header_text %}{% endblock %}</h1>{% endblock %}
                     </div>
-                    <div class="p-2 flex flex-col place-content-center text-center text-accent2" id="clock" data-day-zero="{{ event.day_zero }}">
+                    <div class="p-2 flex flex-col place-content-center text-center text-white" id="clock" data-day-zero="{{ event.day_zero }}">
                         <p class="text-4xl mb-2">Day <span class="font-numbers">69</span></p>
                         <p class="text-5xl font-numbers">13:37</p>
                     </div>
-    
                 </div>
             </div>
             {% endif %}
