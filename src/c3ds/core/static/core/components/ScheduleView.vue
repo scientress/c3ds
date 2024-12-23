@@ -107,7 +107,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
 
 <template>
   <div class="schedule flex flex-col flex-wrap overflow-hidden flex-grow text-highlight">
-    <div v-for="talk in next_talks" :key="talk.guid" class="talk grid grid-cols-schedule text-4xl gap-2">
+    <div v-for="talk in next_talks" :key="talk.guid" class="mb-2 w-full grid grid-cols-schedule text-4xl gap-2">
       <div class="font-numbers font-semibold text-5xl">{{ talk.start }}</div>
       <div class="w-4" :style="{backgroundColor: talk.color}">&nbsp;</div>
       <div :style='{background: `linear-gradient(90deg, #29114C ${talk.percent_completed}%, rgba(0,0,0,0) ${talk.percent_completed}%)`}'>
