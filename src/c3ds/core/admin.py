@@ -13,6 +13,8 @@ class SlugLinkMixin():
     slug_view = 'view_by_slug'
 
     def link(self, obj):
+        if not obj.slug:
+            return ''
         url = reverse(self.slug_view, kwargs={'slug': obj.slug})
         return mark_safe(f'<a href="{url}" target="_blank">view</a>')
 
