@@ -98,3 +98,5 @@ dist-ssr
 
 .hotfile
 .yarn
+
+/src/c3ds/settings/local.py
