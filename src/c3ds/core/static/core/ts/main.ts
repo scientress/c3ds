@@ -113,7 +113,6 @@ class WebSocketClient {
       res.result = (0, eval)(cmd.payload);
     } catch (e: any) {
       res.error = e.toString();
-      return;
     }
 
     res.pEnd = performance.now();
