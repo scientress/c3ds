@@ -106,14 +106,22 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
 </script>
 
 <template>
-  <div v-for="talk in next_talks" :key="talk.guid" class="talk grid grid-cols-schedule text-4xl gap-2">
-    <div class="font-numbers font-semibold text-5xl">{{ talk.start }}</div>
-    <div class="w-4" :style="{backgroundColor: talk.color}">&nbsp;</div>
-    <div :style='{background: `linear-gradient(90deg, #29114C ${talk.percent_completed}%, rgba(0,0,0,0) ${talk.percent_completed}%)`}'>
-      <h2 class="font-headline font-semibold text-5xl">{{ talk.title }}</h2>
-      <p>{{ talk.room }}
-        <template v-if="talk.speakers.length > 0"> with {{ talk.speakers.join(', ') }}</template>
-      </p>
+  <div class="schedule flex flex-col flex-wrap overflow-hidden flex-grow text-highlight">
+    <div v-for="talk in next_talks" :key="talk.guid" class="talk grid grid-cols-schedule text-4xl gap-2">
+      <div class="font-numbers font-semibold text-5xl">{{ talk.start }}</div>
+      <div class="w-4" :style="{backgroundColor: talk.color}">&nbsp;</div>
+      <div :style='{background: `linear-gradient(90deg, #29114C ${talk.percent_completed}%, rgba(0,0,0,0) ${talk.percent_completed}%)`}'>
+        <h2 class="font-headline font-semibold text-5xl">{{ talk.title }}</h2>
+        <p>{{ talk.room }}
+          <template v-if="talk.speakers.length > 0"> with {{ talk.speakers.join(', ') }}</template>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="legend flex flex-wrap -mx-1">
+    <div v-for="track in tracks" :key="track.slug" class="track text-3xl mx-1" :style="{borderColor: track.color}">
+      <p>{{ track.name }}</p>
+<!--      <div class="legend-color" :style="{backgroundColor: track.color}"></div>-->
     </div>
   </div>
 </template>

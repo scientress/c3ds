@@ -7,7 +7,7 @@ declare const window: Window & typeof globalThis & {
  scheduleView?: ComponentPublicInstance<typeof ScheduleView>
 }
 
-const scheduleContainer: HTMLElement|null = document.querySelector('div.schedule')
+const scheduleContainer: HTMLElement|null = document.querySelector('div.schedule-container')
 if (scheduleContainer !== null) {
   let room_filter: string[] = (scheduleContainer.dataset['roomFilter'] || '')
     .split(';')
@@ -17,7 +17,7 @@ if (scheduleContainer !== null) {
   const scheduleView: ComponentPublicInstance<typeof ScheduleView> = createApp(ScheduleView, {
     // initialSchedule: schedule.schedule
     room_filter
-  }).mount('div.schedule')
+  }).mount('div.schedule-container')
   window.scheduleView = scheduleView
 
   const load_data = () => {

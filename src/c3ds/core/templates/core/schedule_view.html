@@ -2,6 +2,6 @@
 {% load ds_utils vite %}
 {% block header_text %}{{ view.title }}{% endblock %}
 {% block content %}
-    <div class="schedule m-2 flex flex-col flex-wrap overflow-hidden h-full text-highlight" data-schedule-url="{{ view.schedule.local_url }}" data-room-filter="{{ view.room_filter | default:'' }}"></div>
+    <div class="schedule-container m-2 flex flex-col overflow-hidden h-full text-highlight" data-schedule-url="{{ view.schedule.local_url }}" data-room-filter="{{ view.room_filter | default:'' }}"></div>
     {% vite 'core/ts/schedule.ts' %}
 {% endblock %}
