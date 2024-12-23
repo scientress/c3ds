@@ -16,8 +16,8 @@ class CustomCollector(Collector):
         display_slugs = Display.objects.all().values_list('slug', flat=True)
         displays_online = 0
         for slug in display_slugs:
-            is_online : Optional[datetime.datetime] = cache.get(Display.heartbeat_cache_key_for_slug(slug))
-            is_online = is_online is not None and (is_online - now).total_seconds() < 60
+            last_heartbeat: Optional[datetime.datetime] = cache.get(Display.heartbeat_cache_key_for_slug(slug))
+            is_online = last_heartbeat is not None and (now - last_heartbeat).total_seconds() < 60
             if is_online:
                 displays_online += 1
             online.add_metric([slug], 1 if is_online else 0)

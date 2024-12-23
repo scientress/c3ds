@@ -33,10 +33,10 @@ class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
         if last is None or not isinstance(last, datetime.datetime):
             return 'Unknown'
         else:
-            if datetime.datetime.now(tz=datetime.UTC) - last > datetime.timedelta(minutes=1):
-                return mark_safe('<span style="color: red;">Offline</span>')
-            else:
+            if (datetime.datetime.now(tz=datetime.UTC) - last).total_seconds() < 60:
                 return mark_safe('<span style="color: green;">Online</span>')
+            else:
+                return mark_safe('<span style="color: red;">Offline</span>')
 
     def last_seen(self, obj: Display):
         last = cache.get(obj.get_heartbeat_cache_key())
