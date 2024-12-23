@@ -12,6 +12,9 @@ logger = logging.getLogger(__name__)
 
 class BackdoorShellConsumer(WebsocketConsumer):
     def connect(self):
+        if not self.scope['user'].is_authenticated:
+            return
+
         self.slug = self.scope['url_route']['kwargs']['display_slug']
         self.group = f'shell_{self.slug}'
 
