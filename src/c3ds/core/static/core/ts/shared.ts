@@ -14,4 +14,3 @@ export interface BackdoorResult {
     pStart: number;
     pEnd?: number | null;
 }
-
