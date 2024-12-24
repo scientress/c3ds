@@ -15,7 +15,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
   interface Track {
     name?: string;
     color?: string;
-    [k: string]: unknown;
+    slug?: string;
   }
 
   const props = withDefaults(defineProps<{
