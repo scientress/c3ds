@@ -1,7 +1,10 @@
 import datetime
 
+import channels.layers
+from asgiref.sync import async_to_sync
 from django.contrib import admin
 from django.core.cache import cache
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -46,6 +49,12 @@ class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
             return 'Unknown'
         else:
             return last.strftime('%Y-%m-%d %H:%M')
+
+    @admin.action(description=_('Reload Display'))
+    def reload(self, request: HttpRequest, queryset):
+        for slug in queryset.values_list('slug', flat=True):
+            channel_layer = channels.layers.get_channel_layer()
+            async_to_sync(channel_layer.group_send)(f'display_{slug}', {'type': 'cmd', 'cmd': 'reload'})
 
 
 @admin.register(HTMLView)
