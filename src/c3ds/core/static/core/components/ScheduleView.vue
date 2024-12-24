@@ -118,7 +118,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
       </div>
     </div>
   </div>
-  <div class="legend flex flex-wrap -mx-1">
+  <div class="legend flex flex-wrap flex-shrink-0 -mx-1">
     <div v-for="track in tracks" :key="track.slug" class="track text-3xl mx-1" :style="{borderColor: track.color}">
       <p>{{ track.name }}</p>
 <!--      <div class="legend-color" :style="{backgroundColor: track.color}"></div>-->
