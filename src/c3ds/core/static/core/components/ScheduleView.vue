@@ -78,7 +78,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
         }
       }
     }
-    _next_talks.sort((a, b) => {
+    /*_next_talks.sort((a, b) => {
       // sort by start time and date
       if (a.date_start.isBefore(b.date_start)) return -1
       if (a.date_start.isAfter(b.date_start)) return 1
@@ -87,7 +87,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
       if (a.room < b.room) return -1
       if (a.room > b.room) return 1
       return 0
-    })
+    })*/
     return _next_talks
   })
 
