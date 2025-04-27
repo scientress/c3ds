@@ -27,6 +27,7 @@ class Display(models.Model):
         verbose_name = _('Display')
         verbose_name_plural = _('Displays')
         default_related_name = 'displays'
+        ordering = ["name"]
         constraints = [
             models.CheckConstraint(
                 condition=(Q(static_view__isnull=True) ^ Q(playlist__isnull=True)),
@@ -54,6 +55,7 @@ class MediaFile(models.Model):
 
     class Meta:
         abstract: True
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -85,6 +87,9 @@ class Playlist(models.Model):
     last_changed = models.DateTimeField(verbose_name=_('Last Changed'), auto_now=True)
     created_at = models.DateTimeField(verbose_name=_('Created At'), auto_now_add=True)
 
+    class Meta:
+        ordering = ["name"]
+
 
 class PlaylistEntry(models.Model):
     playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, verbose_name=_('Playlist'), related_name='entries')
@@ -95,6 +100,9 @@ class PlaylistEntry(models.Model):
         help_text=_('Overrides the display duration of an item. (seconds) \n'
                     'If the item is a video and it\'s not set to loop, this setting will be ignored.')
     )
+
+    class Meta:
+        ordering = ["name"]
 
 
 class BaseView(models.Model):
@@ -120,6 +128,7 @@ class BaseView(models.Model):
         verbose_name = _('View')
         verbose_name_plural = _('Views')
         default_related_name = 'views'
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -163,6 +172,7 @@ class HTMLView(BaseView):
         verbose_name = _('HTML View')
         verbose_name_plural = _('HTML Views')
         default_related_name = 'html_views'
+        ordering = ["name"]
 
     def get_template_name(self):
         return self.template_name_override or 'core/html_views/generic.html'
@@ -180,6 +190,7 @@ class IFrameView(BaseView):
         verbose_name = _('Iframe View')
         verbose_name_plural = _('Iframe Views')
         default_related_name = 'iframe_views'
+        ordering = ["name"]
 
 
 class ImageView(BaseView):
@@ -191,6 +202,7 @@ class ImageView(BaseView):
         verbose_name = _('Image View')
         verbose_name_plural = _('Image Views')
         default_related_name = 'image_views'
+        ordering = ["name"]
 
 
 class VideoView(BaseView):
@@ -204,6 +216,7 @@ class VideoView(BaseView):
         verbose_name = _('Video View')
         verbose_name_plural = _('Video Views')
         default_related_name = 'video_views'
+        ordering = ["name"]
         constraints = [
             models.CheckConstraint(
                 condition=(Q(video__isnull=True) ^ Q(video_url__isnull=True)),
@@ -239,6 +252,7 @@ class Schedule(models.Model):
         verbose_name = _('Schedule')
         verbose_name_plural = _('Schedules')
         default_related_name = 'schedules'
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -294,3 +308,4 @@ class ScheduleView(BaseView):
         verbose_name = _('Schedule View')
         verbose_name_plural = _('Schedule Views')
         default_related_name = 'schedule_views'
+        ordering = ["name"]
