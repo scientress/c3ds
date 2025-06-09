@@ -8,6 +8,16 @@ export default {
       "./c3ds/*/templates/**/*.html",
       "./c3ds/*/static/**/*.{vue,js,ts,jsx,tsx,html}",
   ],
+  safelist: [
+    {
+      pattern: /m-(1|2|3|4|5|6|7|8)/, // You can display all the colors that you need
+      variants: ['lg', 'hover', 'focus', 'lg:hover'],      // Optional
+    },
+    {
+      pattern: /text-(1|2|3|4|5|6|7|8|9)xl/, // You can display all the colors that you need
+      variants: ['lg', 'hover', 'focus', 'lg:hover'],      // Optional
+    },
+  ],
   theme: {
     extend: {
       colors: {
