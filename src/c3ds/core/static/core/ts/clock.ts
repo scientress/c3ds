@@ -10,8 +10,7 @@ import moment from 'moment';
 
   const update_time = () => {
     const now = moment()
-    const diff = moment.duration(now.diff(dayZero))
-    dayElement.textContent = diff.days().toString()
+    dayElement.textContent = now.diff(dayZero, 'days').toString()
     timeElement.textContent = now.format('HH:mm')
   }
   update_time()
