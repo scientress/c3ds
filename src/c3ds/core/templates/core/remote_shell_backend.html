@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% vite %}
     {% vite 'c3ds/static/css/base.scss' %}
-    <title>{% block title %}c3ds - backdoor{% block title-extra %}{% endblock %}{% endblock %}</title>
+    <title>{% block title %}c3ds - remote shell{% block title-extra %}{% endblock %}{% endblock %}</title>
 </head>
 <body {% block body_extra %}{% endblock %}data-display-slug="{{ slug }}">
 {% load ds_utils vite %}
 {% block body %}
     <div id="logContainer"></div>
-    {% vite 'core/ts/backdoor.ts' %}
+    {% vite 'core/ts/remote_shell.ts' %}
 {% endblock %}
 </body>
 </html>

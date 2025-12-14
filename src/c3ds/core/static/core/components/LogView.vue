@@ -2,7 +2,7 @@
 import {onMounted, onUpdated, ref} from "vue";
 import moment from "moment";
 import {Moment} from "moment";
-import {BackdoorResult, WebSocketCommand} from "../ts/shared.ts";
+import {RemoteShellResult, WebSocketCommand} from "../ts/shared.ts";
 
 export interface LogEntry {
   id: number;
@@ -71,8 +71,8 @@ class WebSocketBackend {
       const data: WebSocketCommand = JSON.parse(e.data);
       switch (data?.cmd) {
 
-        case 'bdRES':
-          this.onBackdoorResult(data as BackdoorResult);
+        case 'rsRES':
+          this.onRemoteShellResult(data as RemoteShellResult);
           break;
 
       }
@@ -91,7 +91,7 @@ class WebSocketBackend {
     }, timeout)
   }
 
-  onBackdoorResult(cmd: BackdoorResult) {
+  onRemoteShellResult(cmd: RemoteShellResult) {
     if (!cmd.id) {
       return;
     }
@@ -114,7 +114,7 @@ class WebSocketBackend {
     this.lastId += 1;
 
     const wsCmd: WebSocketCommand = {
-      cmd: 'bdMSG',
+      cmd: 'rsMSG',
       id: this.lastId,
       payload: cmd,
       displaySlug: this.displaySlug,

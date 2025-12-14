@@ -30,7 +30,7 @@ class ShellView(DetailView):
     model = Display
     context_object_name = 'shell'
 
-    template_name = "core/backdoor_backend.html"
+    template_name = "core/remote_shell_backend.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

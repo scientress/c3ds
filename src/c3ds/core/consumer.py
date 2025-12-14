@@ -10,7 +10,7 @@ from c3ds.core.models import Display
 
 logger = logging.getLogger(__name__)
 
-class BackdoorShellConsumer(WebsocketConsumer):
+class RemoteShellConsumer(WebsocketConsumer):
     def connect(self):
         user = self.scope['user']
         if not user.is_authenticated or not user.is_superuser:
@@ -36,8 +36,11 @@ class BackdoorShellConsumer(WebsocketConsumer):
         logger.info('Received message: %s', text_data)
 
         match data.get('cmd', None):
-            case 'bdMSG':
-                async_to_sync(self.channel_layer.group_send)(f'display_{data.get('displaySlug')}', {'type': 'cmd_data', 'data': data})
+            case 'rsMSG':
+                async_to_sync(self.channel_layer.group_send)(
+                    f'display_{data.get('displaySlug')}',
+                    {'type': 'cmd_data', 'data': data}
+                )
 
     def cmd_data(self, event):
         if not 'data' in event:
@@ -72,8 +75,11 @@ class DisplayConsumer(WebsocketConsumer):
                     cache.set(Display.heartbeat_cache_key_for_slug(self.display_slug), datetime.now(tz=UTC), None)
                 self.cmd({'cmd': 'pong'})
 
-            case 'bdRES':
-                async_to_sync(self.channel_layer.group_send)(f'shell_{self.display_slug}', {'type': 'cmd_data', 'data': data})
+            case 'rsRES':
+                async_to_sync(self.channel_layer.group_send)(
+                    f'shell_{self.display_slug}',
+                    {'type': 'cmd_data', 'data': data}
+                )
 
     def cmd(self, event):
         # Receive message from display group

@@ -22,7 +22,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 
 import c3ds.core.urls
-from c3ds.core.consumer import DisplayConsumer, BackdoorShellConsumer
+from c3ds.core.consumer import DisplayConsumer, RemoteShellConsumer
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,5 +41,9 @@ if settings.DEBUG:
 
 websocket_urlpatterns = [
     re_path(r"ws/display/(?P<display_slug>[a-zA-Z0-9-]+)/$", DisplayConsumer.as_asgi()),
-    re_path(r"ws/shell/(?P<display_slug>[a-zA-Z0-9-]+)/$", BackdoorShellConsumer.as_asgi()),
 ]
+
+if settings.REMOTE_SHELL:
+    websocket_urlpatterns += [
+        re_path(r"ws/shell/(?P<display_slug>[a-zA-Z0-9-]+)/$", RemoteShellConsumer.as_asgi()),
+    ]

@@ -1,6 +1,6 @@
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import {BackdoorResult, WebSocketCommand} from "./shared.ts";
+import {RemoteShellResult, WebSocketCommand} from "./shared.ts";
 
 // const displaySlug = document.querySelector('body')?.dataset['displaySlug']
 
@@ -74,8 +74,8 @@ class WebSocketClient {
           this.unanswered_pings = 0
           break;
 
-        case 'bdMSG':
-          this.onBackdoor(data);
+        case 'rsMSG':
+          this.onRemoteShell(data);
           break;
 
       }
@@ -94,13 +94,13 @@ class WebSocketClient {
     }, timeout)
   }
 
-  async onBackdoor(cmd: WebSocketCommand) {
+  async onRemoteShell(cmd: WebSocketCommand) {
     if (!cmd.payload || !cmd.id) {
       return;
     }
 
-    let res: BackdoorResult = {
-      cmd: "bdRES",
+    let res: RemoteShellResult = {
+      cmd: "rsRES",
       reqCmd: cmd.payload,
       id: cmd.id,
       pStart: performance.now(),

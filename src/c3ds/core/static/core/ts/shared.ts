@@ -5,8 +5,8 @@ export interface WebSocketCommand {
     displaySlug?: string;
 }
 
-export interface BackdoorResult {
-    cmd: 'bdRES',
+export interface RemoteShellResult {
+    cmd: 'rsRES',
     id: number;
     reqCmd: string,
     error: string | null;

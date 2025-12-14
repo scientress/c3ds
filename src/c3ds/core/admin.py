@@ -2,6 +2,7 @@ import datetime
 
 import channels.layers
 from asgiref.sync import async_to_sync
+from django.conf import settings
 from django.contrib import admin
 from django.core.cache import cache
 from django.http import HttpRequest
@@ -24,7 +25,10 @@ class SlugLinkMixin():
 
 @admin.register(Display)
 class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
-    list_display = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'heartbeat', 'shell', 'last_changed')
+    list_display = ['name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'heartbeat']
+    if settings.REMOTE_SHELL:
+        list_display.append('shell')
+    list_display.append('last_changed')
     slug_view = 'display_by_slug'
 
     fields = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'last_seen', 'last_changed')
@@ -34,6 +38,8 @@ class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
         return mark_safe(f'<a href="https://38c3.c3nav.de/l/{obj.slug.lower()}" target="_blank">map</a>')
 
     def shell(self, obj):
+        if not settings.REMOTE_SHELL:
+            return ''
         url = reverse('shell_by_slug', kwargs={'slug': obj.slug})
         return mark_safe(f'<a href="{url}" target="_blank">shell</a>')
 
