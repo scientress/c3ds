@@ -27,9 +27,6 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
 
   const schedule = ref(props.initialSchedule)
   const now = ref(moment())
-  function clock_tick() {
-    now.value = moment()
-  }
 
   const tracks: ComputedRef<{[k: string]: Track}> = computed(() => {
     const tracks: {[k: string]: Track} = {}
@@ -48,12 +45,13 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
   // })
 
   const next_talks: ComputedRef<Talk[]> = computed(() => {
+    let max_talks = Math.floor(window.innerHeight / 96)
     if (schedule?.value === undefined) {
       console.log('schedule missing')
       return []
     }
     let _next_talks: Talk[] = []
-    for (let day of schedule.value.conference.days) {
+    daysLoop: for (let day of schedule.value.conference.days) {
       for (let room in day.rooms) {
         for (let event of day.rooms[room]) {
           const talk = event as Talk
@@ -68,13 +66,14 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
           if (talk.date_start.isAfter(now.value)) {
             talk.percent_completed = 0
           } else {
-            talk.percent_completed = now.value.diff(talk.date_start, 's') / duration.asSeconds() * 100
+            talk.percent_completed = now.value.diff(talk.date_start, 's', true) / duration.asSeconds() * 100
           }
           talk.color = talk.track ? tracks.value[talk.track]?.color || '' : ''
           talk.speakers = talk.persons.map((person) => {
             return person.name || ''
           })
           _next_talks.push(talk)
+          if (_next_talks.length >= max_talks) break daysLoop
         }
       }
     }
@@ -91,11 +90,21 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
     return _next_talks
   })
 
+  function clock_tick() {
+    now.value = moment()
+  }
+  let lastClockTick: number|undefined = undefined
+  function animation_callback(timestamp: number) {
+    // limit the clock tick to 5 FPS
+    if (lastClockTick === undefined || (timestamp - lastClockTick) > 200) {
+      clock_tick()
+      lastClockTick = timestamp
+    }
+    window.requestAnimationFrame(animation_callback)
+  }
   onMounted(() => {
     console.log(`the component is now mounted.`)
-    window.setInterval(() => {
-      clock_tick()
-    }, 1000)
+    window.requestAnimationFrame(animation_callback)
   })
 
   defineExpose({
