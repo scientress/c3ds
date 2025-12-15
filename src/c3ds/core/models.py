@@ -101,9 +101,6 @@ class PlaylistEntry(models.Model):
                     'If the item is a video and it\'s not set to loop, this setting will be ignored.')
     )
 
-    class Meta:
-        ordering = ["name"]
-
 
 class BaseView(models.Model):
     view = None
