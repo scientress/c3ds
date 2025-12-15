@@ -1,6 +1,7 @@
 import datetime
 from typing import Optional
 
+from django.apps import apps
 from django.core.cache import cache
 from prometheus_client.core import GaugeMetricFamily, REGISTRY
 from prometheus_client.registry import Collector
@@ -10,6 +11,11 @@ from c3ds.core.models import Display, BaseView, HTMLView, ImageView, VideoView, 
 
 class CustomCollector(Collector):
     def collect(self):
+        # For some reason this is called two times during initialization where we don't want to do Database queries.
+        # So we check if initialization is done, and if not just exist.
+        if not apps.ready:
+            return
+
         now = datetime.datetime.now(tz=datetime.UTC)
         online = GaugeMetricFamily('display_online', 'Online status of displays',
                                    labels=['display_slug'])
