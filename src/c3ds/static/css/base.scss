@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --color-dark: #141414;
+    --color-neutral: #faf5f5;
+    --color-primary: #00ff00;
+    --color-secondary: #9673ff;
+    --color-additional-01: #ff3719;
+    --color-additional-02: #66f2ff;
+
+    --color-primary-tint-01: #009900;
+    --color-primary-tint-02: #00be00;
+    --color-primary-tint-03: #00d300;
+    --color-primary-tint-04: #00ea00;
+    --color-primary-tint-05: #a3ff90;
+    --color-primary-tint-06: #ccffbe;
+    --color-primary-tint-07: #ebffe5;
+
+    --color-secondary-tint-01: #4d2eed;
+    --color-secondary-tint-02: #5c33f4;
+    --color-secondary-tint-03: #7952fe;
+    --color-secondary-tint-04: #b69dfe;
+    --color-secondary-tint-05: #d4c4fe;
+    --color-secondary-tint-06: #efe7ff;
+}
+
+
 .headline {
   @apply font-headline;
   font-variation-settings: "opsz" 140, "wdth" 94, "wght" 100;
