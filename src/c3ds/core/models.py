@@ -3,7 +3,7 @@ import logging
 import uuid
 from contextlib import suppress
 from pathlib import Path
-from typing import Optional, Self
+from typing import Optional, Self, Any
 
 import requests
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
@@ -157,6 +157,9 @@ class BaseView(models.Model):
 
         return reverse("view_by_pk", kwargs={"pk": self.pk})
 
+    def get_context(self) -> dict[str, Any]:
+        return {}
+
 
 class HTMLView(BaseView):
     content = models.TextField(verbose_name=_('HTML Content'), blank=True)
@@ -176,6 +179,12 @@ class HTMLView(BaseView):
 
     def get_vue_module(self):
         return self.vue_module_override or 'HTMLViewGeneric'
+
+    def get_context(self) -> dict[str, Any]:
+        if self.context:
+            return self.context
+        else:
+            return {}
 
 
 class IFrameView(BaseView):

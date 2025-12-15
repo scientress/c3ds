@@ -25,6 +25,7 @@ class GenericView(DetailView):
             'layout_mode': getattr(self.object, 'layout_mode', 'normal'),
             'slug': 'undefined',
         })
+        ctx.update(self.object.get_context())
         return ctx
 
 
@@ -88,4 +89,6 @@ class DisplayView(DetailView):
             'layout_mode': self.get_layout_mode(),
             'slug': self.kwargs.get(self.slug_url_kwarg)
         })
+        if self.get_view() is not None:
+            ctx.update(self.get_view().get_context())
         return ctx
