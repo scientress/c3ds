@@ -21,7 +21,9 @@ class GenericView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx.update({
-            'layout_mode': getattr(self.object, 'layout_mode', 'normal')
+            'view': self.object,
+            'layout_mode': getattr(self.object, 'layout_mode', 'normal'),
+            'slug': 'undefined',
         })
         return ctx
 

@@ -3,7 +3,8 @@
 {% block body_extra %}data-display-slug="{{ slug }}"{% endblock %}
 {% block content %}
     <div class="flex flex-col justify-center grow">
-        <h1 class="text-8xl font-bold m-4 text-center">Display Unconfigured</h1>
-        <h2 class="text-6xl font-bold m-4 text-center font-numbers">{{ slug }}</h2>
+        <h1 class="text-8xl font-bold m-4 text-center">{{ display_status|default:"Display Unconfigured" }}</h1>
+        <h2 class="text-6xl font-bold m-4 text-center font-numbers">Slug: {{ slug }}</h2>
+        <h2 class="text-6xl font-bold m-4 text-center font-numbers">IP: {{ extra_data.ip_address }}</h2>
     </div>
 {% endblock %}

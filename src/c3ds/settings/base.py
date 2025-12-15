@@ -82,6 +82,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'c3ds.core.context_processors.event_data',
+                'c3ds.core.context_processors.extra_data',
             ],
         },
     },
