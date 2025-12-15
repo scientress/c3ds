@@ -2,21 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.cornerblob {
-  @apply bg-background;
-  background-image: url('@/c3ds/static/38c3/images/blobs/corner-blob-1-filled.svg');
-  background-repeat: no-repeat;
-  background-position: 100% 100%;
-  background-size: auto 85%;
-}
-
-.headerblob {
-  @apply bg-background;
-  background-image: url('@/c3ds/static/38c3/images/blobs/blob-collision-rect-11-rot-trans75.svg');
-  background-repeat: no-repeat;
-  background-position: 100% 100%;
-  background-size: 100% 100%;
-  //background-blend-mode: lighten;
+.headline {
+  @apply font-headline;
+  font-variation-settings: "opsz" 140, "wdth" 94, "wght" 100;
 }
 
 body {

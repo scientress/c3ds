@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'KarioDuplexVar';
+    src: URL('Kario39C3Var-Roman.ttf') format('truetype');
+    src: URL('Kario39C3VarWEB-Roman.woff') format('woff');
+    src: URL('Kario39C3VarWEB-Roman.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSansCond';
+    src: URL('OfficerSansCondWeb-Regular.woff') format('woff');
+    src: URL('OfficerSansCondWeb-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSansCond';
+    font-weight: bold;
+    font-style: italic;
+    src: URL('OfficerSansCondWeb-BoldItalic.woff') format('woff');
+    src: URL('OfficerSansCondWeb-BoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSansCond';
+    font-weight: bold;
+    src: URL('OfficerSansCondWeb-Bold.woff') format('woff');
+    src: URL('OfficerSansCondWeb-Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSansCond';
+    font-style: italic;
+    src: URL('OfficerSansCondWeb-RegularItalic.woff') format('woff');
+    src: URL('OfficerSansCondWeb-RegularItalic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSans';
+    src: URL('OfficerSansWeb-Regular.woff') format('woff');
+    src: URL('OfficerSansWeb-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSans';
+    font-weight: bold;
+    font-style: italic;
+    src: URL('OfficerSansWeb-BoldItalic.woff') format('woff');
+    src: URL('OfficerSansWeb-BoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSans';
+    font-weight: bold;
+    src: URL('OfficerSansWeb-Bold.woff') format('woff');
+    src: URL('OfficerSansWeb-Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'OfficerSans';
+    font-style: italic;
+    src: URL('OfficerSansWeb-RegularItalic.woff') format('woff');
+    src: URL('OfficerSansWeb-RegularItalic.woff2') format('woff2');
+}

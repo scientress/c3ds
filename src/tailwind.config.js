@@ -21,20 +21,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#ff5053',
-        highlight: '#fef2ff',
-        accent1: '#6a5fdb',
-        accent2: '#b2aaff',
-        accent3: '#261a66',
-        accent4: '#29114c',
-        background: '#0f000a',
+        dark: '#141414',
+        neutral: '#faf5f5',
+        primary: '#00ff00',
+        secondary: '#9673ff',
+        'additional-01': '#ff3719',
+        'additional-02': '#66f2ff',
+
+        'primary-tint-01': '#009900',
+        'primary-tint-02': '#00be00',
+        'primary-tint-03': '#00d300',
+        'primary-tint-04': '#00ea00',
+        'primary-tint-05': '#a3ff90',
+        'primary-tint-06': '#ccffbe',
+        'primary-tint-07': '#ebffe5',
+
+        'secondary-tint-01': '#4d2eed',
+        'secondary-tint-02': '#5c33f4',
+        'secondary-tint-03': '#7952fe',
+        'secondary-tint-04': '#b69dfe',
+        'secondary-tint-05': '#d4c4fe',
+        'secondary-tint-06': '#efe7ff',
+        background: '#141414',
       },
       fontFamily: {
-        'display-headline': ['Pillow Lava'],
-        'headline': ['Space Grotesk'],
-        'subheadline': ['Uncut Sans'],
-        'sans': ['Uncut Sans', ...defaultTheme.fontFamily.sans],
-        'numbers': ['Space Mono']
+        'headline': ['KarioDuplexVar'],
+        'sans': ['OfficerSans', ...defaultTheme.fontFamily.sans],
+        'sans-condensed': ['OfficerSansCond'],
       },
       gridTemplateColumns: {
         'schedule': 'max-content 15px 1fr',
