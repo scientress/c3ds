@@ -33,7 +33,7 @@ class RemoteShellConsumer(WebsocketConsumer):
 
     def receive(self, text_data = None, bytes_data = None):
         data: dict[str] = json.loads(text_data)
-        logger.info('Received message: %s', text_data)
+        logger.debug('Received message: %s', text_data)
 
         match data.get('cmd', None):
             case 'rsMSG':
@@ -67,7 +67,7 @@ class DisplayConsumer(WebsocketConsumer):
 
     def receive(self, text_data = None, bytes_data = None):
         data: dict[str] = json.loads(text_data)
-        logger.info('Received message: %s', text_data)
+        logger.debug('Received message: %s', text_data)
 
         match data.get('cmd', None):
             case 'ping':
