@@ -74,11 +74,11 @@ body {
 
 @keyframes font_weight_wave {
   from {
-    font-variation-settings: "opsz" 140, "wght" 10;
+    font-variation-settings: "opsz" 140, "wdth" 67, "wght" 10;
     //font-weight: 10;
   }
   to {
-    font-variation-settings: "opsz" 140, "wght" 100;
+    font-variation-settings: "opsz" 140, "wdth" 67, "wght" 100;
     //font-weight: 100;
   }
 }
@@ -86,6 +86,26 @@ body {
 .font-width-animated {
   //font-variation-settings: initial;
   animation: font_weight_wave 3s ease-in-out 0s infinite alternate both;
+
+  &.reversed {
+    animation-direction: alternate-reverse;
+  }
+}
+
+@keyframes font_weight_wave_wide {
+  from {
+    font-variation-settings: "opsz" 140, "wdth" 160, "wght" 10;
+    //font-weight: 10;
+  }
+  to {
+    font-variation-settings: "opsz" 140, "wdth" 160, "wght" 100;
+    //font-weight: 100;
+  }
+}
+
+.font-width-animated-wide {
+  //font-variation-settings: initial;
+  animation: font_weight_wave_wide 3s ease-in-out 0s infinite alternate both;
 
   &.reversed {
     animation-direction: alternate-reverse;

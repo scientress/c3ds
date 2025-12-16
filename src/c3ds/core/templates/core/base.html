@@ -23,7 +23,7 @@
                     <h1 class="text-8xl logo">&lt;&lt;39C3</h1>
                 </div>
                 <div class="flex flex-row grow place-content-center">
-                    {% block header %}<h1 class="text-8xl headline">{% block header_text %}{% endblock %}</h1>{% endblock %}
+                    {% block header %}<h1 class="text-8xl headline {{ header_text_extra_classes | default:'' }}">{% block header_text %}{% endblock %}</h1>{% endblock %}
                 </div>
                 <div class="flex flex-col place-content-center text-right clock" style="width: 310px" id="clock" data-day-zero="{{ event.day_zero }}">
                     <p class="text-4xl mb-2">Day <span class="font-numbers">69</span></p>
