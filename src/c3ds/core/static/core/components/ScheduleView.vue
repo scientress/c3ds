@@ -121,12 +121,12 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
       <div class="w-4" :style="{backgroundColor: talk.color}">&nbsp;</div>
       <div style="position: relative">
         <h2 class="font-bold text-5xl">{{ talk.title }}</h2>
-        <p>{{ talk.room }}
+        <p>In {{ talk.room }}
           <template v-if="talk.speakers.length > 0"> with {{ talk.speakers.join(', ') }}</template>
         </p>
          <div :style='{position: "absolute", left: "0", top: "0", width: "100%", backgroundColor: "var(--color-neutral)", color: "var(--color-dark)", clipPath: `rect(0 ${talk.percent_completed}% 100% 0`}'>
         <h2 class="font-bold text-5xl">{{ talk.title }}</h2>
-        <p>{{ talk.room }}
+        <p>In {{ talk.room }}
           <template v-if="talk.speakers.length > 0"> with {{ talk.speakers.join(', ') }}</template>
         </p>
       </div>

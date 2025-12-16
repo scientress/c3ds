@@ -26,12 +26,6 @@
     --color-secondary-tint-06: #efe7ff;
 }
 
-
-.headline {
-  @apply font-headline;
-  font-variation-settings: "opsz" 140, "wdth" 94, "wght" 100;
-}
-
 body {
   height: 100vh; // we can't use 100dvh, because cch uses chrome 70 -_-
 
@@ -46,9 +40,72 @@ body {
   }
 }
 
+.headline {
+  @apply font-headline;
+  font-variation-settings: "opsz" 140, "wdth" 94, "wght" 100;
+
+  &.compressed {
+    font-variation-settings: "wdth" 30;
+  }
+  &.xCondensed {
+    font-variation-settings: "wdth" 56;
+  }
+  &.condensed {
+    font-variation-settings: "wdth" 67;
+  }
+  &.narrow {
+    font-variation-settings: "wdth" 80;
+  }
+  &.regular {
+    font-variation-settings: "wdth" 94;
+  }
+  &.extended {
+    font-variation-settings: "wdth" 120;
+  }
+  &.xExtended {
+    font-variation-settings: "wdth" 160;
+  }
+}
+
+.logo {
+  @apply font-headline;
+  font-variation-settings: "opsz" 140, "wdth" 67, "wght" 100;
+}
+
+@keyframes font_weight_wave {
+  from {
+    font-variation-settings: "opsz" 140, "wght" 10;
+    //font-weight: 10;
+  }
+  to {
+    font-variation-settings: "opsz" 140, "wght" 100;
+    //font-weight: 100;
+  }
+}
+
+.font-width-animated {
+  //font-variation-settings: initial;
+  animation: font_weight_wave 3s ease-in-out 0s infinite alternate both;
+
+  &.reversed {
+    animation-direction: alternate-reverse;
+  }
+}
+
+.clock {
+  @apply font-headline;
+  font-variant-numeric: tabular-nums;
+  font-variation-settings: "opsz" 140, "wdth" 120, "wght" 80;
+}
+
 .track {
   padding-right: 60px;
   border-bottom-width: 12px;
+
+  &:first-of-type {
+    padding-left: 0.25rem;
+    border-left-width: 12px;
+  }
 }
 
 .legend-color {

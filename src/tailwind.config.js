@@ -17,6 +17,9 @@ export default {
       pattern: /text-(1|2|3|4|5|6|7|8|9)xl/, // You can display all the colors that you need
       variants: ['lg', 'hover', 'focus', 'lg:hover'],      // Optional
     },
+    {
+      pattern: /items-.*/,
+    },
   ],
   theme: {
     extend: {
