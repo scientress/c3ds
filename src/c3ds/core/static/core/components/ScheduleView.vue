@@ -127,7 +127,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
 </script>
 
 <template>
-  <div class="schedule flex flex-col flex-wrap overflow-hidden flex-grow text-neutral">
+  <TransitionGroup name="list" tag="div" class="schedule flex flex-col flex-wrap overflow-hidden flex-grow text-neutral">
     <div v-for="talk in next_talks" :key="talk.guid" class="mb-2 w-full grid grid-cols-schedule text-4xl gap-2">
       <div class="font-numbers font-semibold text-5xl">{{ talk.start }}</div>
       <div class="w-4" :style="{backgroundColor: talk.color}">&nbsp;</div>
@@ -144,7 +144,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
       </div>
       </div>
     </div>
-  </div>
+  </TransitionGroup>
   <div class="legend flex flex-wrap flex-shrink-0 -mx-1">
     <div v-for="track in tracks" :key="track.slug" class="track text-3xl mx-1" :style="{borderColor: track.color}">
       <p>{{ track.name }}</p>
