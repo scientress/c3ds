@@ -73,20 +73,32 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
             return person.name || ''
           })
           _next_talks.push(talk)
-          if (_next_talks.length >= max_talks) break daysLoop
+          if (_next_talks.length >= max_talks) break
         }
       }
     }
-    /*_next_talks.sort((a, b) => {
+    const priorityRooms = ['One', 'Ground', 'Zero', 'Fuse']
+    _next_talks.sort((a, b) => {
       // sort by start time and date
       if (a.date_start.isBefore(b.date_start)) return -1
       if (a.date_start.isAfter(b.date_start)) return 1
 
       // if it is the same, sort by room name
+
+      // forst check special rooms
+      const aInPriorityRooms = priorityRooms.includes(a.room)
+      const bInPriorityRooms = priorityRooms.includes(b.room)
+      if (aInPriorityRooms || bInPriorityRooms) {
+        if (!aInPriorityRooms) return 1
+        if (!bInPriorityRooms) return -1
+        return (priorityRooms.indexOf(a.room) < priorityRooms.indexOf(b.room)) ? -1: 1
+      }
+
+      // then sort alphabetical
       if (a.room < b.room) return -1
       if (a.room > b.room) return 1
       return 0
-    })*/
+    })
     return _next_talks
   })
 
