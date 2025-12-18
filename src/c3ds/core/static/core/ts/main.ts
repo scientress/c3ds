@@ -25,6 +25,10 @@ if (video_container !== null) {
   }
 }
 
+declare const window: Window & typeof globalThis & {
+ ntp?: NTPClient
+}
+
 
 // websocket stuff
 if (displaySlug !== undefined) {
@@ -32,6 +36,7 @@ if (displaySlug !== undefined) {
   const ws = new WebSocketClient(displaySlug, true)
   new RemoteShellClient(ws)
   const ntp = new NTPClient(ws)
+  window.ntp = ntp
   window.setTimeout(() =>{
     ntp.sendNTPRequest()
   }, 1000)

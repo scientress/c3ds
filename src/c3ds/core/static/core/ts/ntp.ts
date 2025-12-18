@@ -1,5 +1,5 @@
 import {ReceivedWebSocketCommand, WebSocketClient, WebSocketCommand} from "./websocket.ts";
-import moment from "moment";
+import moment, {Moment} from "moment";
 
 export interface NTPRequest extends WebSocketCommand{
   cmd: 'NTPRequest'
@@ -17,6 +17,8 @@ export interface NTPResponse extends ReceivedWebSocketCommand{
 export class NTPClient {
   ws: WebSocketClient
   syncInterval: number | null = null
+  offset: number | null = null
+  latency: number | null = null
 
   constructor(webSocketClient: WebSocketClient) {
     this.ws = webSocketClient
@@ -30,7 +32,7 @@ export class NTPClient {
     this.stopTimers()
     this.syncInterval = window.setInterval(() =>{
       this.sendNTPRequest()
-    }, 5 * 60 * 1000)
+    }, 10 * 1000)
   }
 
   stopTimers() {
@@ -53,8 +55,18 @@ export class NTPClient {
     }
     const serverTime = moment(response.serverTime)
     const roundTripTime = response.receiveTimestampe - response.clientSendTimestamp
-    const timeoffset = Date.now() - (response.serverTime + roundTripTime / 2 + performance.now() - response.receiveTimestampe)
+    const offset = Date.now() - (response.serverTime + roundTripTime / 2 + performance.now() - response.receiveTimestampe)
+    this.latency = roundTripTime
+    this.offset = offset
 
-    console.log(`Received NTP Response after ${roundTripTime} with server time ${serverTime.toISOString(true)} (an offset of ${timeoffset})`)
+    console.log(`Received NTP Response after ${roundTripTime}ms with server time ${serverTime.toISOString(true)} (an offset of ${offset}ms)`)
+  }
+
+  getAdjustedTime(): Moment {
+    const now = moment()
+    if (this.offset != null) {
+      now.subtract(this.offset, 'milliseconds')
+    }
+    return now
   }
 }
