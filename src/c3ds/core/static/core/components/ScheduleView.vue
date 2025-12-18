@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import {Schedule, Event} from "../../../../static/ts/c3voc.ts"
+import {Schedule} from "../../../../static/ts/c3voc.ts"
+import {ProcessedEvent} from "../ts/schedule_types.ts";
 import {computed, ComputedRef, onMounted, ref} from "vue"
   import moment from 'moment'
-  import {Moment} from "moment/moment";
-
-  interface Talk extends Event {
-    date_start: Moment
-    date_end: Moment
-    color: string
-    speakers: string[]
-    percent_completed: number
-  }
+  import ScheduleRow from "./ScheduleRow.vue";
 
   interface Track {
     name?: string;
@@ -44,30 +37,25 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
   //   return rooms
   // })
 
-  const next_talks: ComputedRef<Talk[]> = computed(() => {
+  const next_talks: ComputedRef<ProcessedEvent[]> = computed(() => {
     let max_talks = Math.floor(window.innerHeight / 96)
     if (schedule?.value === undefined) {
       console.log('schedule missing')
       return []
     }
-    let _next_talks: Talk[] = []
+    let _next_talks: ProcessedEvent[] = []
     daysLoop: for (let day of schedule.value.conference.days) {
-      for (let room in day.rooms) {
+      roomsLoop: for (let room in day.rooms) {
         for (let event of day.rooms[room]) {
-          const talk = event as Talk
+          const talk = event as ProcessedEvent
           if (props.room_filter.length > 0 && !props.room_filter.includes(talk.room)) {
             continue
           }
           talk.date_start = moment(event.date)
           talk.date_end = talk.date_start.clone()
-          let duration = moment.duration(talk.duration)
-          talk.date_end.add(duration)
+          talk.moment_duration = moment.duration(talk.duration)
+          talk.date_end.add(talk.moment_duration)
           if (talk.date_end.isBefore(now.value)) continue
-          if (talk.date_start.isAfter(now.value)) {
-            talk.percent_completed = 0
-          } else {
-            talk.percent_completed = now.value.diff(talk.date_start, 's', true) / duration.asSeconds() * 100
-          }
           talk.color = talk.track ? tracks.value[talk.track]?.color || '' : ''
           talk.speakers = talk.persons.map((person) => {
             return person.name || ''
@@ -102,48 +90,28 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
     return _next_talks
   })
 
-  function clock_tick() {
+  function minute_tick() {
+    console.log("boop")
     now.value = moment()
-  }
-  let lastClockTick: number|undefined = undefined
-  function animation_callback(timestamp: number) {
-    // limit the clock tick to 5 FPS
-    if (lastClockTick === undefined || (timestamp - lastClockTick) > 200) {
-      clock_tick()
-      lastClockTick = timestamp
-    }
-    window.requestAnimationFrame(animation_callback)
+    window.setTimeout(() => {
+      minute_tick()
+    }, (60 - now.value.second() - 1) * 1000 + 1000 - now.value.milliseconds())
   }
   onMounted(() => {
     console.log(`the component is now mounted.`)
-    window.requestAnimationFrame(animation_callback)
+    minute_tick()
   })
 
   defineExpose({
     schedule,
     now,
-    clock_tick
+    minute_tick
   })
 </script>
 
 <template>
   <TransitionGroup name="list" tag="div" class="schedule flex flex-col flex-wrap overflow-hidden flex-grow text-neutral">
-    <div v-for="talk in next_talks" :key="talk.guid" class="mb-2 w-full grid grid-cols-schedule text-4xl gap-2">
-      <div class="font-numbers font-semibold text-5xl">{{ talk.start }}</div>
-      <div class="w-4" :style="{backgroundColor: talk.color}">&nbsp;</div>
-      <div style="position: relative">
-        <h2 class="font-bold text-5xl">{{ talk.title }}</h2>
-        <p>In {{ talk.room }}
-          <template v-if="talk.speakers.length > 0"> with {{ talk.speakers.join(', ') }}</template>
-        </p>
-         <div :style='{position: "absolute", left: "0", top: "0", width: "100%", backgroundColor: "var(--color-neutral)", color: "var(--color-dark)", clipPath: `rect(0 ${talk.percent_completed}% 100% 0`}'>
-        <h2 class="font-bold text-5xl">{{ talk.title }}</h2>
-        <p>In {{ talk.room }}
-          <template v-if="talk.speakers.length > 0"> with {{ talk.speakers.join(', ') }}</template>
-        </p>
-      </div>
-      </div>
-    </div>
+    <ScheduleRow v-for="talk in next_talks" :key="talk.guid" :talk="talk"></ScheduleRow>
   </TransitionGroup>
   <div class="legend flex flex-wrap flex-shrink-0 -mx-1">
     <div v-for="track in tracks" :key="track.slug" class="track text-3xl mx-1" :style="{borderColor: track.color}">
