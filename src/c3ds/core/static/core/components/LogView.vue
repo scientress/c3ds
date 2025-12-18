@@ -2,7 +2,8 @@
 import {onMounted, onUpdated, ref} from "vue";
 import moment from "moment";
 import {Moment} from "moment";
-import {RemoteShellResult, WebSocketCommand} from "../ts/shared.ts";
+import {RemoteShellResult, RemoteShellCommand} from "../ts/remote_shell.ts";
+import {WebSocketCommand} from "../ts/websocket.ts";
 
 export interface LogEntry {
   id: number;
@@ -113,7 +114,7 @@ class WebSocketBackend {
 
     this.lastId += 1;
 
-    const wsCmd: WebSocketCommand = {
+    const wsCmd: RemoteShellCommand = {
       cmd: 'rsMSG',
       id: this.lastId,
       payload: cmd,
@@ -135,7 +136,7 @@ class WebSocketBackend {
     }
   }
 
-  addLogElement(cmd: WebSocketCommand) {
+  addLogElement(cmd: RemoteShellCommand) {
     logEntries.value.push({
       id: cmd.id!,
       cmd: cmd.payload!,

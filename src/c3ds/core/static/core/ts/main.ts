@@ -1,8 +1,9 @@
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import {RemoteShellResult, WebSocketCommand} from "./shared.ts";
+import {WebSocketClient} from "./websocket.ts";
+import {RemoteShellClient} from "./remote_shell.ts";
 
-// const displaySlug = document.querySelector('body')?.dataset['displaySlug']
+const displaySlug = document.querySelector('body')?.dataset['displaySlug']
 
 // Video Playback
 const video_container = document.getElementById('video')
@@ -25,107 +26,10 @@ if (video_container !== null) {
 
 
 // websocket stuff
+if (displaySlug !== undefined) {
+  console.log('Initializing Websocket Client')
+  const ws = new WebSocketClient(displaySlug, true)
+  new RemoteShellClient(ws)
 
-
-class WebSocketClient {
-  displaySlug: string | null
-  ws: WebSocket | null = null
-  heartbeat_interval: number | null = null
-  unanswered_pings: number = 0
-
-  constructor(autoconnect: boolean) {
-    this.displaySlug = document.querySelector('body')?.dataset['displaySlug'] || null
-
-    if (autoconnect) this.connect()
-  }
-
-  connect() {
-    if (this.displaySlug === undefined || this.displaySlug == null) {
-      return
-    }
-    this.ws = new WebSocket(
-      (window.location.protocol === 'https:' ? 'wss://' : 'ws://')
-      + window.location.host
-      + '/ws/display/'
-      + this.displaySlug
-      + '/'
-    )
-    this.ws.onopen = () => {
-      console.log('open');
-      this.unanswered_pings = 0
-      this.heartbeat_interval = window.setInterval(() => {
-        console.log('sending ping')
-        this.unanswered_pings += 1
-        if (this.unanswered_pings > 30) window.location.reload()  // reload if we didn't get a pong for 300 sec
-        this.ws?.send(JSON.stringify({
-          cmd: 'ping'
-        }))
-      }, 5000)
-    }
-    this.ws.onmessage = (e) => {
-      console.log("got data from websocket:", e.data)
-      const data: WebSocketCommand = JSON.parse(e.data);
-      switch (data?.cmd) {
-        case 'reload':
-          window.location.reload()
-          break;
-
-        case 'pong':
-          this.unanswered_pings = 0
-          break;
-
-        case 'rsMSG':
-          this.onRemoteShell(data);
-          break;
-
-      }
-    }
-    this.ws.onclose = () => {
-      this.reconnect()
-    }
-  }
-
-  reconnect() {
-    this.ws?.close()
-    const timeout = 5000 + 2000 * Math.random()
-    console.log('WS connection died, reconencting in %d', timeout)
-    window.setTimeout(() => {
-      this.connect()
-    }, timeout)
-  }
-
-  async onRemoteShell(cmd: WebSocketCommand) {
-    if (!cmd.payload || !cmd.id) {
-      return;
-    }
-
-    let res: RemoteShellResult = {
-      cmd: "rsRES",
-      reqCmd: cmd.payload,
-      id: cmd.id,
-      pStart: performance.now(),
-      pEnd: null,
-      error: null,
-      result: null,
-    };
-
-    try {
-      const r = (0, eval)(cmd.payload);
-      if (r instanceof Promise || Object.getPrototypeOf(r).hasOwnProperty('then')) {
-        res.result = await r;
-      } else {
-        res.result = r;
-      }
-
-    } catch (e: any) {
-      res.error = e.toString();
-    }
-
-    res.pEnd = performance.now();
-
-    this.ws?.send(JSON.stringify(res));
-  }
-
+  console.log('Client Initialized', ws)
 }
-
-new WebSocketClient(true)

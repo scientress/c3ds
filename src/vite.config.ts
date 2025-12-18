@@ -20,6 +20,7 @@ export default defineConfig({
         'core/ts/clock.ts',
         'core/ts/schedule.ts',
         'core/ts/remote_shell.ts',
+        'core/ts/remote_shell_backend.ts',
       ],
     })
   ],
