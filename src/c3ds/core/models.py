@@ -45,6 +45,13 @@ class Display(models.Model):
     def get_heartbeat_cache_key(self):
         return self.heartbeat_cache_key_for_slug(self.slug)
 
+    @staticmethod
+    def ntp_offset_cache_key_for_slug(slug: str) -> str:
+        return f'{slug}-ntp-offset'
+
+    def get_ntp_offset_cache_key(self):
+        return self.heartbeat_cache_key_for_slug(self.slug)
+
 
 class MediaFile(models.Model):
     name = models.CharField(max_length=128, verbose_name=_('Name'))

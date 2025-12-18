@@ -13,6 +13,12 @@ export interface NTPResponse extends ReceivedWebSocketCommand{
   serverTime: number
 }
 
+export interface NTPReport extends WebSocketCommand{
+  cmd: 'NTPReport'
+  ntpOffset: number
+  ntpLatency: number
+}
+
 
 export class NTPClient {
   ws: WebSocketClient
@@ -60,6 +66,12 @@ export class NTPClient {
     this.offset = offset
 
     console.log(`Received NTP Response after ${roundTripTime}ms with server time ${serverTime.toISOString(true)} (an offset of ${offset}ms)`)
+    const ntpReport: NTPReport = {
+      cmd: "NTPReport",
+      ntpOffset: offset,
+      ntpLatency: roundTripTime,
+    }
+    this.ws.send(ntpReport)
   }
 
   getAdjustedTime(): Moment {

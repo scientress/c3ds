@@ -77,11 +77,24 @@ class DisplayConsumer(WebsocketConsumer):
                 self.cmd({'cmd': 'pong'})
 
             case 'NTPRequest':
-                self.cmd_data({'data': {
-                    'cmd': 'NTPResponse',
-                    'serverTime': time_ns() // 1000000,
-                    'clientSendTimestamp': data['sendTimestamp'],
-                }})
+                try:
+                    self.cmd_data({'data': {
+                        'cmd': 'NTPResponse',
+                        'serverTime': time_ns() // 1000000,
+                        'clientSendTimestamp': data['sendTimestamp'],
+                    }})
+                except KeyError:
+                    logger.error('Received invalid NTPRequest')
+
+            case 'NTPReport':
+                try:
+                    if not self.scope['user'].is_authenticated:
+                        cache.set(Display.ntp_offset_cache_key_for_slug(self.display_slug), data['ntpOffset'], None)
+                    logger.info('Received NTPReport, Offset: %0.3f ms, Latency: %0.3f ms',
+                                data['ntpOffset'], data['ntpLatency'])
+                except KeyError:
+                    logger.error('Received invalid NTPReport')
+
 
             case 'rsRES':
                 async_to_sync(self.channel_layer.group_send)(

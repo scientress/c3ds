@@ -19,6 +19,10 @@ class CustomCollector(Collector):
         now = datetime.datetime.now(tz=datetime.UTC)
         online = GaugeMetricFamily('display_online', 'Online status of displays',
                                    labels=['display_slug'])
+        ntp_offset = GaugeMetricFamily('display_ntp_offset', 'NTP time offset of displays',
+                                       labels=['display_slug'])
+        # ntp_latency = GaugeMetricFamily('display_ntp_latency',
+        #                                 'Latency between NTP Server and displays', labels=['display_slug'])
         display_slugs = Display.objects.all().values_list('slug', flat=True)
         displays_online = 0
         for slug in display_slugs:
@@ -27,7 +31,12 @@ class CustomCollector(Collector):
             if is_online:
                 displays_online += 1
             online.add_metric([slug], 1 if is_online else 0)
+
+            display_ntp_offset: Optional[float] = cache.get(Display.ntp_offset_cache_key_for_slug(slug))
+            if display_ntp_offset is not None:
+                ntp_offset.add_metric([slug], display_ntp_offset)
         yield online
+        yield ntp_offset
         yield GaugeMetricFamily('number_of_displays', 'Number of displays',
                                 value=len(display_slugs))
         yield GaugeMetricFamily('number_of_displays_online', 'Number of displays currently online',
