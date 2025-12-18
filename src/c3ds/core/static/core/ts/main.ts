@@ -2,6 +2,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import {WebSocketClient} from "./websocket.ts";
 import {RemoteShellClient} from "./remote_shell.ts";
+import {NTPClient} from "./ntp.ts";
 
 const displaySlug = document.querySelector('body')?.dataset['displaySlug']
 
@@ -30,6 +31,10 @@ if (displaySlug !== undefined) {
   console.log('Initializing Websocket Client')
   const ws = new WebSocketClient(displaySlug, true)
   new RemoteShellClient(ws)
+  const ntp = new NTPClient(ws)
+  window.setTimeout(() =>{
+    ntp.sendNTPRequest()
+  }, 1000)
 
   console.log('Client Initialized', ws)
 }

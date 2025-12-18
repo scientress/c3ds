@@ -1,6 +1,7 @@
 import json
 import logging
 from datetime import datetime, UTC
+from time import time_ns
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
@@ -75,6 +76,13 @@ class DisplayConsumer(WebsocketConsumer):
                     cache.set(Display.heartbeat_cache_key_for_slug(self.display_slug), datetime.now(tz=UTC), None)
                 self.cmd({'cmd': 'pong'})
 
+            case 'NTPRequest':
+                self.cmd_data({'data': {
+                    'cmd': 'NTPResponse',
+                    'serverTime': time_ns() // 1000000,
+                    'clientSendTimestamp': data['sendTimestamp'],
+                }})
+
             case 'rsRES':
                 async_to_sync(self.channel_layer.group_send)(
                     f'shell_{self.display_slug}',
@@ -90,6 +98,7 @@ class DisplayConsumer(WebsocketConsumer):
         if isinstance(cmd, str):
             cmd = {'cmd': cmd}
 
+        logger.debug('Sending command: %s', cmd)
         # Send message to WebSocket
         self.send(text_data=json.dumps(cmd))
 
