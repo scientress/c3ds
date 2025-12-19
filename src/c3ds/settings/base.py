@@ -282,6 +282,8 @@ if DAY_ZERO:
 
 REMOTE_SHELL = env.bool('C3DS_REMOTE_SHELL', default=False)
 
+DELAYED_RELOAD_THRESHOLD = env.int('C3DS_DELAYED_RELOAD_THRESHOLD', default=10)
+
 # SSO
 SOCIAL_AUTH_PIPELINE = (
     ###################

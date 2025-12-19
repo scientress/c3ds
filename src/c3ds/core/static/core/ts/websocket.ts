@@ -6,6 +6,10 @@ export interface ReceivedWebSocketCommand extends WebSocketCommand {
   receiveTimestampe: number;
 }
 
+export interface ReloadWebSocketCommand extends ReceivedWebSocketCommand {
+  delayed?: boolean
+}
+
 export interface websocketMessageCallback { (cmd: ReceivedWebSocketCommand): void }
 
 export class WebSocketClient {
@@ -41,7 +45,16 @@ export class WebSocketClient {
 
       switch (data?.cmd) {
         case 'reload':
-          window.location.reload()
+          if ((data as ReloadWebSocketCommand).delayed) {
+            const timeout = 20 * 1000 * Math.random()
+            console.log(`received reload command, reloading in ${timeout/1000} seconds!`)
+            window.setTimeout(() => {
+              window.location.reload()
+            }, timeout)
+          } else {
+            console.log('received reload command, reloading NOW!')
+            window.location.reload()
+          }
           break;
 
         case 'pong':

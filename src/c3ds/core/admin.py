@@ -5,13 +5,15 @@ from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.contrib import admin
 from django.core.cache import cache
+from django.db import models
+from django.db.models import functions
 from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from c3ds.core.models import (Display, HTMLView, IFrameView, ImageFile, ImageView, Schedule, ScheduleView, VideoFile,
-                              VideoView)
+from c3ds.core.models import (Display, DisplayQuerySet, HTMLView, IFrameView, ImageFile, ImageView, Schedule,
+                              ScheduleView, VideoFile, VideoView)
 
 class SlugLinkMixin():
     slug_view = 'view_by_slug'
@@ -33,6 +35,7 @@ class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
 
     fields = ('name', 'slug', 'static_view', 'playlist', 'link', 'c3nav', 'last_seen', 'last_changed')
     readonly_fields = ('link', 'c3nav', 'last_seen', 'last_changed')
+    actions = ('reload', )
 
     def c3nav(self, obj):
         return mark_safe(f'<a href="https://38c3.c3nav.de/l/{obj.slug.lower()}" target="_blank">map</a>')
@@ -60,20 +63,30 @@ class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
         else:
             return last.strftime('%Y-%m-%d %H:%M')
 
-    @admin.action(description=_('Reload Display'))
+    @admin.action(description=_('Reload Display(s)'))
+    def reload(self, request: HttpRequest, queryset: DisplayQuerySet):
+        queryset.reload()
+
+
+class ViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+    actions = ('reload',)
+
+    @admin.action(description=_('Reload Sssigned Display(s)'))
     def reload(self, request: HttpRequest, queryset):
-        for slug in queryset.values_list('slug', flat=True):
-            channel_layer = channels.layers.get_channel_layer()
-            async_to_sync(channel_layer.group_send)(f'display_{slug}', {'type': 'cmd', 'cmd': 'reload'})
+        num_displays = queryset.annotate(num_displays = functions.Coalesce(models.Count('displays'), 0))\
+            .aggregate(num_displays=models.Sum('num_displays', default=0))['num_displays']
+        delayed = num_displays > settings.DELAYED_RELOAD_THRESHOLD
+        for view in queryset.all():
+            view.displays.reload(delayed)
 
 
 @admin.register(HTMLView)
-class HTMLViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+class HTMLViewAdmin(ViewAdmin):
     list_display = ('name', 'slug', 'title', 'link', 'last_changed')
 
 
 @admin.register(IFrameView)
-class IFrameViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+class IFrameViewAdmin(ViewAdmin):
     list_display = ('name', 'slug', 'title', 'layout_mode', 'url', 'link', 'last_changed')
 
 
@@ -86,7 +99,7 @@ class ImageFileAdmin(admin.ModelAdmin):
 
 
 @admin.register(ImageView)
-class ImageViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+class ImageViewAdmin(ViewAdmin):
     list_display = ('name', 'slug', 'title', 'layout_mode', 'image', 'link', 'last_changed')
 
 
@@ -99,7 +112,7 @@ class VideoFileAdmin(admin.ModelAdmin):
 
 
 @admin.register(VideoView)
-class VideoViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+class VideoViewAdmin(ViewAdmin):
     list_display = ('name', 'slug', 'title', 'layout_mode', 'video', 'video_url', 'link', 'last_changed')
 
 
@@ -117,5 +130,5 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 
 @admin.register(ScheduleView)
-class ScheduleViewAdmin(admin.ModelAdmin, SlugLinkMixin):
+class ScheduleViewAdmin(ViewAdmin):
     list_display = ('name', 'slug', 'title', 'layout_mode', 'schedule', 'room_filter', 'link', 'last_changed')

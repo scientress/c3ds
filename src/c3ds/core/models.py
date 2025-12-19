@@ -5,13 +5,28 @@ from contextlib import suppress
 from pathlib import Path
 from typing import Optional, Self, Any
 
+import channels.layers
 import requests
+from asgiref.sync import async_to_sync
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
+from c3ds.core.enums import DisplayCommands
+
 logger = logging.getLogger(__name__)
+channel_layer = channels.layers.get_channel_layer()
+
+
+class DisplayQuerySet(models.QuerySet):
+    def reload(self, delayed: Optional[bool] = None):
+        slugs = self.values_list('slug', flat=True)
+        if delayed is None:
+            delayed = delayed = len(slugs) >= settings.DELAYED_RELOAD_THRESHOLD
+        for slug in slugs:
+            self.model.reload_by_slug(slug, delayed)
 
 
 class Display(models.Model):
@@ -22,6 +37,8 @@ class Display(models.Model):
     playlist = models.ForeignKey('Playlist', on_delete=models.PROTECT, verbose_name=_('Playlist'), null=True, blank=True)
     last_changed = models.DateTimeField(verbose_name=_('Last Changed'), auto_now=True)
     created_at = models.DateTimeField(verbose_name=_('Created At'), auto_now_add=True)
+
+    objects = DisplayQuerySet.as_manager()
 
     class Meta:
         verbose_name = _('Display')
@@ -37,6 +54,26 @@ class Display(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    async def async_reload_by_slug(cls, slug: str, delayed: bool = False):
+        await channel_layer.group_send(f'display_{slug}', {
+            'type': 'cmd',
+            'cmd': {
+                'cmd': DisplayCommands.RELOAD,
+                'delayed': delayed,
+            }
+        })
+
+    @classmethod
+    def reload_by_slug(cls, slug: str, delayed: bool = False):
+        async_to_sync(cls.async_reload_by_slug)(slug, delayed)
+
+    async def async_reload(self, delayed: bool = False):
+        await self.async_reload_by_slug(self.slug)
+
+    def reload(self, delayed: bool = False):
+        async_to_sync(self.async_reload)(delayed)
 
     @staticmethod
     def heartbeat_cache_key_for_slug(slug: str) -> str:

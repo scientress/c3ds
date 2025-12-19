@@ -110,6 +110,8 @@ class DisplayConsumer(WebsocketConsumer):
 
         if isinstance(cmd, str):
             cmd = {'cmd': cmd}
+        elif not isinstance(cmd, dict):
+            raise TypeError('Invalid cmd object')
 
         logger.debug('Sending command: %s', cmd)
         # Send message to WebSocket
