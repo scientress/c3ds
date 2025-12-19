@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {NTPClient} from "./ntp.ts";
+import {getCurrentTime, NTPClient} from "./ntp.ts";
 
 declare const window: Window & typeof globalThis & {
  ntp?: NTPClient
@@ -16,7 +16,7 @@ declare const window: Window & typeof globalThis & {
   const dayZero = moment(container.dataset['dayZero'])
 
   const update_time = () => {
-    const now = !window.ntp ? moment() : window.ntp.getAdjustedTime()
+    const now = getCurrentTime()
     dayElement.textContent = now.diff(dayZero, 'days').toString()
     timeElement.textContent = now.format('HH:mm')
 

@@ -4,6 +4,7 @@ import {ProcessedEvent} from "../ts/schedule_types.ts";
 import {computed, ComputedRef, onMounted, ref} from "vue"
   import moment from 'moment'
   import ScheduleRow from "./ScheduleRow.vue";
+import {getCurrentTime} from "../ts/ntp.ts";
 
   interface Track {
     name?: string;
@@ -19,7 +20,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
   })
 
   const schedule = ref(props.initialSchedule)
-  const now = ref(moment())
+  const now = ref(getCurrentTime())
 
   const tracks: ComputedRef<{[k: string]: Track}> = computed(() => {
     const tracks: {[k: string]: Track} = {}
@@ -91,8 +92,7 @@ import {computed, ComputedRef, onMounted, ref} from "vue"
   })
 
   function minute_tick() {
-    console.log("boop")
-    now.value = moment()
+    now.value = getCurrentTime()
     window.setTimeout(() => {
       minute_tick()
     }, (60 - now.value.second() - 1) * 1000 + 1000 - now.value.milliseconds())

@@ -1,6 +1,10 @@
 import {ReceivedWebSocketCommand, WebSocketClient, WebSocketCommand} from "./websocket.ts";
 import moment, {Moment} from "moment";
 
+declare const window: Window & typeof globalThis & {
+ ntp?: NTPClient
+}
+
 export interface NTPRequest extends WebSocketCommand{
   cmd: 'NTPRequest'
   localClockTime: number
@@ -81,4 +85,8 @@ export class NTPClient {
     }
     return now
   }
+}
+
+export function getCurrentTime(): Moment {
+  return !window.ntp ? moment() : window.ntp.getAdjustedTime()
 }

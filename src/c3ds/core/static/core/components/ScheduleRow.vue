@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import {ProcessedEvent} from "../ts/schedule_types.ts";
   import {computed, ComputedRef, onMounted, ref} from "vue";
-  import moment from "moment/moment";
+  import {getCurrentTime} from "../ts/ntp.ts";
 
   const props = defineProps<{
     talk: ProcessedEvent
   }>()
 
-  const now = ref(moment())
+  const now = ref(getCurrentTime())
   const duration_seconds: number = props.talk.moment_duration.asSeconds()
 
   const percent_completed: ComputedRef<number> = computed(() => {
@@ -19,7 +19,7 @@
   })
 
   function clock_tick() {
-    now.value = moment()
+    now.value = getCurrentTime()
   }
   let lastClockTick: number|undefined = undefined
   function animation_callback(timestamp: number) {
