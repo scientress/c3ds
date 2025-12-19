@@ -9,7 +9,14 @@ export default defineConfig({
     target: [
       'es2020',
       'chrome70',
-    ]
+    ],
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          videojs: ['video.js'],
+        }
+      }
+    },
   },
   plugins: [
     vue(),
