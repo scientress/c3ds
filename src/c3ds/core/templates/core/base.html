@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      window.sentryOnLoad = function () {
+          console.log('Configuring Sentry Client')
+          const displaySlug = document.querySelector('body').dataset['displaySlug']
+          if(displaySlug) Sentry.setTag('display_slug', displaySlug)
+      };
+    </script>
     <script src="https://sentry.isystems.io/js-sdk-loader/cfc085dcd1c21540642b44be23697b12.min.js" crossorigin="anonymous"></script>
     {% vite %}
     {% vite 'c3ds/static/css/base.scss' %}
