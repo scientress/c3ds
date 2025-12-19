@@ -100,3 +100,4 @@ dist-ssr
 .yarn
 
 /src/c3ds/settings/local.py
+/src/.env.sentry-build-plugin

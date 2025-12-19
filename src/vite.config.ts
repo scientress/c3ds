@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { djangoVitePlugin } from 'django-vite-plugin'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 
 // https://vite.dev/config/
 export default defineConfig({
   build: {
+    sourcemap: true,
     target: [
       'es2020',
       'chrome70',
@@ -29,7 +31,12 @@ export default defineConfig({
         'core/ts/remote_shell.ts',
         'core/ts/remote_shell_backend.ts',
       ],
-    })
+    }),
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
   ],
   server: {
     origin: 'http://127.0.0.1:5173',
