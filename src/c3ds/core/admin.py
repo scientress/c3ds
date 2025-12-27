@@ -38,7 +38,7 @@ class DisplayAdmin(admin.ModelAdmin, SlugLinkMixin):
     actions = ('reload', )
 
     def c3nav(self, obj):
-        return mark_safe(f'<a href="https://38c3.c3nav.de/l/{obj.slug.lower()}" target="_blank">map</a>')
+        return mark_safe(f'<a href="{settings.C3NAV_BASE_URL}/l/{obj.slug.lower()}" target="_blank">map</a>')
 
     def shell(self, obj):
         if not settings.REMOTE_SHELL:
