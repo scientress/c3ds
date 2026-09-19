@@ -85,7 +85,7 @@ import {getCurrentTime} from "../ts/ntp.ts";
           if (talk.date_end.isBefore(now.value)) continue
           talk.color = talk.track ? tracks.value[talk.track]?.color || '' : ''
           talk.speakers = talk.persons.map((person) => {
-            return person.name || ''
+            return person.name || person.public_name as string || ''
           })
           _next_talks.push(talk)
         }
