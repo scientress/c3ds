@@ -330,8 +330,8 @@ class Schedule(models.Model):
             data = req.json()
             old_version = self.version
             new_version = data['schedule']['version']
-            if not force and self.version and self.version == new_version:
-                logger.info('Not updating schedule "%s" [%d], unchanged. (Version)', self.name, self.pk)
+            if self.version and self.version == new_version:
+                logger.warning('schedule "%s" [%d], has unchanged version, but different etag.', self.name, self.pk)
                 return
             if not self.file.name:
                 self.file.name = f'schedules/schedule-{self.uuid}.json'
