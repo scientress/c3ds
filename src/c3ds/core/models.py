@@ -320,10 +320,10 @@ class Schedule(models.Model):
                         .strftime('%a, %d %b %Y %H:%M:%S GMT')
             req = requests.get(self.url, headers={
                 'Accept': 'application/json',
-                'If-None-Match': self.etag,
+                'If-None-Match': None if force else self.etag,
                 'If-Modified-Since': None if self.etag else file_time
             })
-            if not force and req.status_code == 304:
+            if req.status_code == 304:
                 logger.info('Not updating schedule "%s" [%d], unchanged. (304)', self.name, self.pk)
                 return
             req.raise_for_status()
