@@ -88,7 +88,6 @@ import {getCurrentTime} from "../ts/ntp.ts";
             return person.name || ''
           })
           _next_talks.push(talk)
-          if (_next_talks.length >= max_talks) break
         }
       }
     }
@@ -114,7 +113,7 @@ import {getCurrentTime} from "../ts/ntp.ts";
       if (a.room > b.room) return 1
       return 0
     })
-    return _next_talks
+    return _next_talks.slice(0, max_talks)
   })
 
   function minute_tick() {
