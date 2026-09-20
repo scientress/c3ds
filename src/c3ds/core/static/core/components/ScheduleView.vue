@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {Room, Schedule} from "../../../../static/ts/c3voc.ts"
-import {ProcessedEvent} from "../ts/schedule_types.ts";
+import {Break, ProcessedEvent} from "../ts/schedule_types.ts";
 import {computed, ComputedRef, onMounted, ref} from "vue"
-  import moment from 'moment'
-  import ScheduleRow from "./ScheduleRow.vue";
+import moment from 'moment'
+import ScheduleRow from "./ScheduleRow.vue";
+import BreakRow from "./BreakRow.vue";
 import {getCurrentTime} from "../ts/ntp.ts";
+import {uuid} from "../ts/uuid.ts";
 
   interface Track {
     name?: string;
@@ -63,17 +65,18 @@ import {getCurrentTime} from "../ts/ntp.ts";
     return guid_room_names
   })
 
-  const next_talks: ComputedRef<ProcessedEvent[]> = computed(() => {
+  const next_events: ComputedRef<(ProcessedEvent | Break)[]> = computed(() => {
     let max_talks = Math.floor(window.innerHeight / 96)
     if (schedule?.value === undefined) {
       console.log('schedule missing')
       return []
     }
-    let _next_talks: ProcessedEvent[] = []
+    let _next_talks: (ProcessedEvent)[] = []
     daysLoop: for (let day of schedule.value.conference.days) {
       roomsLoop: for (let room in day.rooms) {
         for (let event of day.rooms[room]) {
           const talk = event as ProcessedEvent
+          talk.is_break = false;
           if (room_filter_combined.value.length > 0 && !room_filter_combined.value.includes(talk.room)) {
             continue
           }
@@ -113,7 +116,36 @@ import {getCurrentTime} from "../ts/ntp.ts";
       if (a.room > b.room) return 1
       return 0
     })
-    return _next_talks.slice(0, max_talks)
+
+    let _next_talks_with_breaks: (ProcessedEvent | Break)[] = []
+
+    for (let talk_idx = 0; talk_idx < _next_talks.length; talk_idx++) {
+      const talk = _next_talks[talk_idx]
+      const room = talk.room
+      const next_talk_in_room = _next_talks.find((_talk, _talk_idx) => {
+        if (_talk_idx <= talk_idx) return false
+        return _talk.room === room;
+      });
+
+      const next_talk_start = moment(next_talk_in_room?.date)
+
+      const _break: Break = {
+        room,
+        date_start: talk.date_end,
+        date_end: next_talk_start,
+        moment_duration: moment.duration(next_talk_start.diff(talk.date_end)),
+        guid: uuid(),
+        is_break: true,
+      }
+
+      console.log('_break', _break)
+      _next_talks_with_breaks.push(talk)
+
+      if (_break.moment_duration.asSeconds() < 10) continue
+      _next_talks_with_breaks.push(_break)
+    }
+
+    return _next_talks_with_breaks.slice(0, max_talks)
   })
 
   function minute_tick() {
@@ -136,7 +168,10 @@ import {getCurrentTime} from "../ts/ntp.ts";
 
 <template>
   <TransitionGroup name="list" tag="div" class="schedule flex flex-col flex-wrap overflow-hidden flex-grow text-neutral">
-    <ScheduleRow v-for="talk in next_talks" :key="talk.guid" :talk="talk"></ScheduleRow>
+    <template v-for="event in next_events" :key="event.guid">
+      <ScheduleRow v-if="!event.is_break" :talk="event"></ScheduleRow>
+      <BreakRow v-if="event.is_break" :talk="event"></BreakRow>
+    </template>
   </TransitionGroup>
   <div class="legend flex flex-wrap flex-shrink-0 -mx-1">
     <div v-for="track in tracks" :key="track.slug" class="track text-3xl mx-1" :style="{borderColor: track.color}">
